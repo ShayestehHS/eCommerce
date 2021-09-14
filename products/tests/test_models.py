@@ -22,10 +22,10 @@ class ProductModelTest(TestCase):
         super(ProductModelTest, self).setUp()
 
     def tearDown(self):
-        product_img_path = os.path.join(MEDIA_ROOT, 'Products', 'images',
-                                        'test')
-        if os.path.exists(product_img_path):
-            rmtree(product_img_path)
+        """ Delete MEDIA_ROOT of test time """
+        # Check MEDIA_ROOT is not the main one
+        if r'\test_media_root' in MEDIA_ROOT:
+            rmtree(MEDIA_ROOT)
         super(ProductModelTest, self).tearDown()
 
     def test_create_product_with_valid_data(self):
