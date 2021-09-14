@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-&i)&qam9h@lhpfa1mc_a@jay_zu3xq9v$w&)&1tb)89%m2)%t7
 DEBUG = True
 TEST = 'test' in sys.argv
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
@@ -115,15 +115,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'static_root')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_my_proj')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static', 'static_dirs')]
+
 
 MEDIA_URL = '/media/'
 if not TEST:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'media_root')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'static_cdn', 'test_media_root')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'test_media_root')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
