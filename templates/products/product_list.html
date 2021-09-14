@@ -3,9 +3,15 @@
 {% block title %}All products{% endblock title %}
 
 {% block content %}
-    {% for product in products %}
-        <a href="{{ product.get_absolute_url }}">{{ product.title }}</a>
-    {% empty %}
-        <p>We don't have any product</p>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+            {% for product in products %}
+                <div class="col">
+                    {% include 'products/snippet/card.html' with instance=product %}
+                </div>
+            {% empty %}
+                <p>We don't have any product</p>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock content %}
