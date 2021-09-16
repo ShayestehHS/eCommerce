@@ -12,6 +12,9 @@ def get_image_upload_path(instance, filename):
 
 
 class ProductQuerySet(models.query.QuerySet):
+    def all_id(self):
+        return self.all().values_list('id',flat=True)
+
     def featured(self):
         return self.filter(is_featured=True)
 
@@ -26,8 +29,13 @@ class ProductQuerySet(models.query.QuerySet):
 
 
 class ProductModelManager(models.Manager):
+
+
     def get_queryset(self):
         return ProductQuerySet(self.model, self._db)
+
+    def all_id(self):
+        return self.get_queryset().all_id()
 
     def featured(self):
         return self.get_queryset().featured()
