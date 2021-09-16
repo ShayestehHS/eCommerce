@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # Our apps
     'accounts',
     'products',
+    'carts',
 
     # Third party apps
     'taggit',
