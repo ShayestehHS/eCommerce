@@ -14,5 +14,8 @@
             <li>is_active: {{ product.is_active }}</li>
             <li>Description: {{ product.description|linebreaks }}</li>
         </ul>
+        {% if product.id in cart.products.all_id %}
+            <a href="#" class="btn btn-danger">Remove from cart</a>
+        {% endif %}
     </div>
 {% endblock %}
