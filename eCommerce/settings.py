@@ -37,7 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Our apps
+    'accounts',
     'products',
+
+    # Third party apps
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -111,13 +117,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'accounts.User'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static', 'static_dirs')]
-
 
 MEDIA_URL = '/media/'
 if not TEST:
@@ -128,3 +135,12 @@ else:
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    import mimetypes
+    from django.urls import path, include
+
+    mimetypes.add_type("application/javascript", ".js", True)
+    INTERNAL_IPS = ('127.0.0.1',)
+    INSTALLED_APPS += ['debug_toolbar']
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']

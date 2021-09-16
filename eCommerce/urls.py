@@ -18,9 +18,19 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from eCommerce import views
+from debug_toolbar import urls as debug_toolbar_url
+
 urlpatterns = [
+    path('', views.HomeTemplateView.as_view(), name='home'),
+    path('search/', views.SearchProductListView.as_view(), name='search'),
+
     path('admin/', admin.site.urls),
-    path('products/', include('products.urls', namespace='products'))
+    path('products/', include('products.urls', namespace='products')),
+    path('cart/', include('carts.urls', namespace='carts')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += [path('__debug__/', include(debug_toolbar_url))]
