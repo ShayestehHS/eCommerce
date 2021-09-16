@@ -1,9 +1,9 @@
 from django.urls.conf import path, include
 
-# from carts.views import
+from carts import views
 
 app_name = 'carts'
 
 urlpatterns = [
-    # path('', ,name='cart'),
+    path('', views.cart_home, name='cart'),
 ]
