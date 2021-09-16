@@ -8,7 +8,7 @@ from taggit.managers import TaggableManager
 
 
 def get_image_upload_path(instance, filename):
-    return os.path.join('Products', 'images', instance.title, filename)
+    return os.path.join('Products', 'images', instance.name, filename)
 
 
 class ProductQuerySet(models.query.QuerySet):
@@ -40,8 +40,8 @@ class ProductModelManager(models.Manager):
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=120, unique=True,
-                             help_text="Maximum length is 120 character.")
+    name = models.CharField(max_length=120, unique=True,
+                            help_text="Maximum length is 120 character.")
     slug = models.SlugField(blank=True, unique=True,
                             help_text="This field is not required.")
     image = models.ImageField(upload_to=get_image_upload_path)
@@ -57,12 +57,12 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.name)
 
         super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title
+        return self.name
 
     def get_absolute_url(self):
         return reverse('products:detail', kwargs={'slug': self.slug})

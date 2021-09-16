@@ -4,5 +4,5 @@ from products.models import Product
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug']
-    ordering = ['title']
+    list_display = ['name', 'slug']
+    ordering = ['name']

@@ -30,7 +30,7 @@ class ProductModelTest(TestCase):
 
     def test_create_product_with_valid_data(self):
         product_data = {
-            'title': 'test',
+            'name': 'test',
             'slug': 'test',
             'image': self.image,
             'price': Decimal('20.99'),
@@ -40,7 +40,7 @@ class ProductModelTest(TestCase):
         }
         Product.objects.create(**product_data)
 
-        created_product = Product.objects.filter(title=product_data['title'])
+        created_product = Product.objects.filter(title=product_data['name'])
 
         self.assertTrue(created_product.exists())
         self.assertEqual(created_product.count(), 1)
@@ -55,7 +55,7 @@ class ProductModelTest(TestCase):
         self.assertIsNotNone(testing_product.image)
 
     def test_title_is_unique(self):
-        title = 'Product title'
+        title = 'Product name'
         product_data = {
             'image': self.image,
             'price': 20,
@@ -63,13 +63,13 @@ class ProductModelTest(TestCase):
         }
         Product.objects.create(title=title, **product_data)
 
-        error_msg = 'UNIQUE constraint failed: products_product.title'
+        error_msg = 'UNIQUE constraint failed: products_product.name'
         with self.assertRaisesRegex(IntegrityError, error_msg):
             Product.objects.create(title=title, **product_data)
 
     def test_slug_is_creating_automatically(self):
         product_data = {
-            'title': 'test',
+            'name': 'test',
             'image': self.image,
             'price': 20,
             'description': 'Long description',
@@ -77,7 +77,7 @@ class ProductModelTest(TestCase):
         product = Product.objects.create(**product_data)
 
         self.assertIsNotNone(product.slug)
-        self.assertEqual(product.slug, slugify(product_data['title']))
+        self.assertEqual(product.slug, slugify(product_data['name']))
 
     def test_slug_is_unique(self):
         slug = 'Product-slug'

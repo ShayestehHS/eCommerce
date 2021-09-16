@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ product.title }}{% endblock title %}
+{% block title %}{{ product.name }}{% endblock title %}
 
 
 {% block content %}
     <div class="container">
-        <h3>{{ product.title|title }}</h3>
+        <h3>{{ product.name|title }}</h3>
         <p>{{ product.timestamp|timesince }} ago</p>
-        <img src="{{ product.image.url }}" alt="{{ product.title }} logo">
+        <img src="{{ product.image.url }}" alt="{{ product.name }} logo">
         <ul>
             <li>Price: ${{ product.price }}</li>
             <li>is_featured: {{ product.is_featured }}</li>
