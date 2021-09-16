@@ -1,7 +1,10 @@
 import os
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.text import slugify
+
+from taggit.managers import TaggableManager
 
 
 def get_image_upload_path(instance, filename):
@@ -10,18 +13,30 @@ def get_image_upload_path(instance, filename):
 
 class ProductQuerySet(models.query.QuerySet):
     def featured(self):
-        self.filter(is_featured=True)
+        return self.filter(is_featured=True)
 
     def active(self):
-        self.filter(is_active=True)
+        return self.filter(is_active=True)
+
+    def search(self, query):
+        lookups = (Q(title__icontains=query) |
+                   Q(description__icontains=query) |
+                   Q(tags__name__icontains=query))
+        return self.filter(lookups, is_active=True).distinct()
 
 
 class ProductModelManager(models.Manager):
+    def get_queryset(self):
+        return ProductQuerySet(self.model, self._db)
+
     def featured(self):
-        self.get_queryset().filter(is_featured=True)
+        return self.get_queryset().featured()
 
     def active(self):
-        self.get_queryset().filter(is_active=True)
+        return self.get_queryset().active()
+
+    def search(self, query):
+        return self.get_queryset().search(query)
 
 
 class Product(models.Model):
@@ -35,6 +50,8 @@ class Product(models.Model):
     description = models.TextField()
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    tags = TaggableManager(blank=True)
 
     objects = ProductModelManager()
 
