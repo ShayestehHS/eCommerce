@@ -2,13 +2,17 @@
 
 {% block title %}{{ product.title }}{% endblock title %}
 
+
 {% block content %}
-    <img src="{{ product.image.url }}" alt="">
-    <ul>
-        <li>Slug: {{ product.slug }}</li>
-        <li>Price: {{ product.price }}</li>
-        <li>Description: {{ product.description }}</li>
-        <li>is_featured: {{ product.is_featured }}</li>
-        <li>is_active: {{ product.is_active }}</li>
-    </ul>
+    <div class="container">
+        <h3>{{ product.title|title }}</h3>
+        <p>{{ product.timestamp|timesince }} ago</p>
+        <img src="{{ product.image.url }}" alt="{{ product.title }} logo">
+        <ul>
+            <li>Price: ${{ product.price }}</li>
+            <li>is_featured: {{ product.is_featured }}</li>
+            <li>is_active: {{ product.is_active }}</li>
+            <li>Description: {{ product.description|linebreaks }}</li>
+        </ul>
+    </div>
 {% endblock %}

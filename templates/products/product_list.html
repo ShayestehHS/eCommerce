@@ -3,6 +3,13 @@
 {% block title %}All products{% endblock title %}
 
 {% block content %}
+    {% url 'search' as search_url %}
+    {% if request.GET.q and request.path == search_url %}
+        <div class="container">
+            You searched for '{{ request.GET.q }}'
+        </div>
+    {% endif %}
+
     <div class="container">
         <div class="row">
             {% for product in products %}

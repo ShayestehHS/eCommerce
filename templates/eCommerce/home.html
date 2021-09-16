@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <h1>Welcome to our website</h1>
+        <img src="{% static 'images/eCommerce_home.jpg' %}"
+             alt="home image" width="50%" height="50%">
+    </div>
+{% endblock content %}
