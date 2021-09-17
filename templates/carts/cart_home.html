@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block titile %}Cart{% endblock titile %}
+
+
+{% block content %}
+    <div class="container">
+        <h1>Cart</h1>
+    {% if products is not None %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Product name</th>
+                <th scope="col">Product price</th>
+                <th scope="col">Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }} $</td>
+                <td>{% include 'carts/snippets/remove_product_form.html' %}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="1"></th>
+                <th scope="row">Subtotal</th>
+                <td colspan="2">{{ cart.subtotal}}</td>
+            </tr>
+            <tr>
+                <th colspan="1"></th>
+                <th scope="row">Total</th>
+                <td colspan="2">{{ cart.total}}</td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+    </div>
+{% endblock content %}
