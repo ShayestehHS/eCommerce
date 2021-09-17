@@ -4,4 +4,4 @@ from carts.models import Cart
 
 @admin.register(Cart)
 class CartModelAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('id',)
