@@ -1,7 +1,8 @@
 {% url 'home' as home_url %}
 {% url 'products:list' as products_url %}
+{% url 'carts:home' as carts_url %}
 <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-3">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'home' %}">eCommerce</a>
             <button class="navbar-toggler" type="button"
@@ -19,21 +20,31 @@
                            aria-current="page" href="{{ home_url }}"
 
                         >Home</a>
-                    </li>
+                    </li><!-- Home -->
                     {% if not request.user.is_authenticated %}
                         <li class="nav-item link-danger">
                             <a class="nav-link active" aria-current="page"
                                href="#">Login</a>
                         </li>
-                    {% endif %}
+                    {% endif %}<!-- Login -->
                     <li class="nav-item link-danger">
                         <a class="nav-link
                         {% if request.path == products_url %}active{% endif %}"
                            href="{{ products_url }}">Products</a>
-                    </li>
+                    </li><!-- Products -->
                     <li>
                         <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                    </li>
+                    </li><!-- Admin -->
+                    <li class="nav-item link-danger">
+                        <a class=" nav-link position-relative
+                        {% if request.path == carts_url %}active{% endif %}"
+                           href="{{ carts_url }}">Cart
+                            <span class="position-absolute top-0 start-100
+                                translate-middle badge rounded-pill bg-success">{{ request.session.cart_items }}
+                            </span>
+                        </a>
+                    </li><!-- Cart -->{# ToDo: font-awesome #}
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#"
                            id="navbarDropdown" role="button"
@@ -58,7 +69,7 @@
                 <form action="{% url 'search' %}" class="d-flex" method="GET">
                     <input class="form-control me-2" type="search"
                            placeholder="Search" aria-label="Search"
-                            name="q" value="{{ request.GET.q }}">
+                           name="q" value="{{ request.GET.q }}">
                     <button class="btn btn-outline-success" type="submit">
                         Search
                     </button>
