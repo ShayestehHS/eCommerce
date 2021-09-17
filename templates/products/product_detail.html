@@ -15,7 +15,9 @@
             <li>Description: {{ product.description|linebreaks }}</li>
         </ul>
         {% if product.id in cart.products.all_id %}
-            <a href="#" class="btn btn-danger">Remove from cart</a>
+            {% include 'carts/snippets/remove_product_form.html' with product=product is_add=True %}
+        {% else %}
+            {% include 'carts/snippets/add_product_form.html' with product=product %}
         {% endif %}
     </div>
 {% endblock %}
