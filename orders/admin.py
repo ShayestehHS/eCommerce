@@ -5,4 +5,4 @@ from orders.models import Order
 
 @admin.register(Order)
 class OrderModelAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('id', 'order_id')

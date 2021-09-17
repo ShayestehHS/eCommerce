@@ -11,7 +11,7 @@ ORDER_STATUS_CHOICES = (
 
 
 class Order(models.Model):
-    order_id = models.CharField(max_length=10)
+    order_id = models.CharField(max_length=10, editable=False)
 
     cart = models.ForeignKey(to=Cart, on_delete=models.CASCADE)
     status = models.CharField(max_length=8, choices=ORDER_STATUS_CHOICES)
