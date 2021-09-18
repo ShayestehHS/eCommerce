@@ -39,11 +39,13 @@
             </table>
         {% else %}
             <h3>Your cart is empty</h3>
-            <p>
-                Maybe you want to login?😁 <a
-                    href="{% url 'accounts:login' %}"
-                    class="btn btn-sm btn-info">Login</a>
-            </p>
+            {% if not request.user.is_authenticated %}
+                <p>
+                    Maybe you want to login?😁 <a
+                        href="{% url 'accounts:login' %}"
+                        class="btn btn-sm btn-info">Login</a>
+                </p>
+            {% endif %}
         {% endif %}
     </div>
 {% endblock content %}
