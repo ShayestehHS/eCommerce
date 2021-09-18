@@ -1,6 +1,7 @@
 {% url 'home' as home_url %}
 {% url 'products:list' as products_url %}
 {% url 'carts:home' as carts_url %}
+
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-3">
         <div class="container-fluid">
@@ -24,12 +25,12 @@
                     {% if request.user.is_authenticated %}
                         <li class="nav-item link-danger">
                             <a class="nav-link" aria-current="page"
-                               href="{% url 'admin:logout' %}">Logout</a>
+                               href="{% url 'accounts:logout' %}">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item link-danger">
                             <a class="nav-link" aria-current="page"
-                               href="#">Login</a>
+                               href="{% url 'accounts:login' %}">Login</a>
                         </li>
                     {% endif %}<!-- Login -->
                     <li class="nav-item link-danger">
