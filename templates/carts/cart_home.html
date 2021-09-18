@@ -4,39 +4,46 @@
 
 
 {% block content %}
+    <h1>Cart</h1>
     <div class="container">
-        <h1>Cart</h1>
-    {% if products is not None %}
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Product name</th>
-                <th scope="col">Product price</th>
-                <th scope="col">Remove</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for product in products %}
-            <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ product.name }}</td>
-                <td>{{ product.price }} $</td>
-                <td>{% include 'carts/snippets/remove_product_form.html' %}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <th colspan="1"></th>
-                <th scope="row">Subtotal</th>
-                <td colspan="2">{{ cart.subtotal}}</td>
-            </tr>
-            <tr>
-                <th colspan="1"></th>
-                <th scope="row">Total</th>
-                <td colspan="2">{{ cart.total}}</td>
-            </tr>
-            </tbody>
-        </table>
-    {% endif %}
+        {% if products.count is not 0 %}
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Product name</th>
+                    <th scope="col">Product price</th>
+                    <th scope="col">Remove</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.price }} $</td>
+                        <td>{% include 'carts/snippets/remove_product_form.html' %}</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <th colspan="1"></th>
+                    <th scope="row">Subtotal</th>
+                    <td colspan="2">{{ cart.subtotal }}</td>
+                </tr>
+                <tr>
+                    <th colspan="1"></th>
+                    <th scope="row">Total</th>
+                    <td colspan="2">{{ cart.total }}</td>
+                </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <h3>Your cart is empty</h3>
+            <p>
+                Maybe you want to login?😁 <a
+                    href="{% url 'admin:login' %}"
+                    class="btn btn-sm btn-info">Login</a>
+            </p>
+        {% endif %}
     </div>
 {% endblock content %}
