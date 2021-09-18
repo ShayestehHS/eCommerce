@@ -2,7 +2,7 @@ from carts.models import Cart
 
 
 def validate_cart_id(cart_id, req):
-    if cart_id is None or not isinstance(cart_id, int):
+    if not isinstance(cart_id, int):
         try:
             cart_id = int(cart_id)
         except ValueError:  # cart_id is something like 'abc'
@@ -16,7 +16,7 @@ def validate_cart_id(cart_id, req):
 
 
 def get_cart_from_session(req):
-    cart_id = req.session.get('cart_id')
+    cart_id = req.session.get('cart_id', 0)
     cart_id = validate_cart_id(cart_id, req)
 
     cart_obj, is_new = Cart.objects.get_or_new(user=req.user, id=cart_id)
