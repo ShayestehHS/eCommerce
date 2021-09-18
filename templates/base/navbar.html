@@ -44,9 +44,14 @@
                         <a class=" nav-link position-relative
                         {% if request.path == carts_url %}active{% endif %}"
                            href="{{ carts_url }}">Cart
-                            <span class="position-absolute top-0 start-100
-                                translate-middle badge rounded-pill bg-success">{{ request.session.cart_items }}
-                            </span>
+                            {% with request.session.cart_items as cart_count %}
+                                {% if cart_count %}
+                                    <span class="position-absolute top-0 start-100
+                                    translate-middle badge rounded-pill bg-success">{{ request.session.cart_items }}
+                                    </span>
+                                {% endif %}
+                            {% endwith %}
+
                         </a>
                     </li><!-- Cart -->{# ToDo: font-awesome #}
 
