@@ -39,10 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Our apps
-    'accounts',
-    'products',
-    'carts',
-    'orders',
+    'accounts.apps.AccountsConfig',
+    'products.apps.ProductsConfig',
+    'carts.apps.CartsConfig',
+    'orders.apps.OrdersConfig',
 
     # Third party apps
     'taggit',

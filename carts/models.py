@@ -1,7 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_save, m2m_changed
 from django.conf import settings
-from django.dispatch import receiver
 
 from products.models import Product
 
@@ -65,22 +63,11 @@ class Cart(models.Model):
 
     objects = CartManager()
 
+    def save(self, *args, **kwargs):
+        super(Cart, self).save(*args, **kwargs)
+
     def __str__(self):
         return f"cart {self.id}"
 
 
-@receiver(m2m_changed, sender=Cart.products.through)
-def m2m_changed_cart_receiver(sender, instance, action, **kwargs):
-    if 'post_' in action:  # post_save post_remove post_clear
-        subtotal = 0
-        for product in instance.products.all():
-            subtotal += product.price
 
-        instance.subtotal = subtotal
-        instance.total = subtotal  # *1.08
-        instance.save(update_fields=['subtotal', 'total'])
-
-
-@receiver(pre_save, sender=Cart)
-def pre_save_cart_receiver(sender, instance, **kwargs):
-    instance.total = instance.subtotal + 10 if instance.subtotal != 0 else 0
