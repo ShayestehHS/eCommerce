@@ -21,9 +21,14 @@
 
                         >Home</a>
                     </li><!-- Home -->
-                    {% if not request.user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
                         <li class="nav-item link-danger">
-                            <a class="nav-link active" aria-current="page"
+                            <a class="nav-link" aria-current="page"
+                               href="{% url 'admin:logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item link-danger">
+                            <a class="nav-link" aria-current="page"
                                href="#">Login</a>
                         </li>
                     {% endif %}<!-- Login -->
