@@ -25,18 +25,22 @@ def get_product(product_id):
 
 
 class CartManager(models.Manager):
-
     def new(self, user=None):
         user = user if user and user.is_authenticated else None
         cart = self.model.objects.create(user=user)
         return cart
 
-    def get_or_new(self, user=None, **kwargs):
+    def get_or_new(self, request, **kwargs):
+        user = request.user
         try:
             obj, is_new = self.model.objects.get(**kwargs), False
         except self.model.DoesNotExist:
             user = user if user.is_authenticated else None
             obj, is_new = self.model.objects.new(user=user), True
+
+        if is_new:
+            request.session['cart_id'] = obj.id
+            request.session['cart_items'] = 0
 
         return obj, is_new
 
