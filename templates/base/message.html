@@ -6,10 +6,10 @@
                  aria-atomic="true" data-bs-autohide="false">
                 <div class="toast-header">
                     <p class="me-auto h5">Message</p>
-                    <p class="text-info text-center h6">{{ request.user.username|default:'Guest' }}</p>
+                    <p class="text-info text-center h6">{{ request.user.full_name|default:'Guest' }}</p>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <div class="toast-body rounded-bottom mb-auto">
+                <div class="toast-body rounded-bottom mb-auto text-white">
                     {{ message }}
                 </div>
             </div>
