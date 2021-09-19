@@ -2,11 +2,11 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_user, logout as logout_user
 from django.shortcuts import redirect, render
-from django.utils.http import is_safe_url
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import get_user_model
 
 from accounts.forms import LoginForm
+from eCommerce.utils import is_valid_url
 
 User = get_user_model()
 
@@ -31,7 +31,7 @@ def login(request):
         login_user(request, user)
         messages.success(request, 'You successfully logged in.')
 
-        if not is_safe_url(next_page, request.get_host()):
+        if not is_valid_url(request, next_page):
             return redirect('home')
         return redirect(next_page)
     return render(request, 'accounts/login.html', context)
