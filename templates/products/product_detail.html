@@ -4,10 +4,14 @@
 
 
 {% block content %}
+    <h3>{{ product.name|title }}</h3>
     <div class="container">
-        <h3>{{ product.name|title }}</h3>
         <p>{{ product.timestamp|timesince }} ago</p>
-        <img src="{{ product.image.url }}" alt="{{ product.name }} logo">
+        <div class="col-12 col-md-3">
+            <img src="{{ product.image.url }}" alt="{{ product.name }} logo"
+                 class="rounded img-fluid">
+        </div>
+        <h5>Information:</h5>
         <ul>
             <li>Price: ${{ product.price }}</li>
             <li>is_featured: {{ product.is_featured }}</li>
