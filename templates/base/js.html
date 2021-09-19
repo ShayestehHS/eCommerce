@@ -2,4 +2,17 @@
 {% block js %}
     <script src="{% static 'Bootstrap/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'JQuery/jquery-3.6.0.min.js' %}"></script>
+    <script>$(document).ready(function () {
+        const toasts = $(".toast");
+        for (let i = 0; i < toasts.length; i++) {
+            const toast = $(toasts[i]);
+            const tag = toast.attr("data-tags");
+            if (tag === 'success') {
+               toast.children('.toast-body').css('background-color', 'green');
+            } else if (tag === 'error'){
+                toast.children('.toast-body').css('background-color', 'red');
+            }
+        }
+        toasts.toast('show');
+    });</script>
 {% endblock js %}

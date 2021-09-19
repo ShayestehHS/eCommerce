@@ -1,10 +1,16 @@
 from django.views.generic import TemplateView, ListView
 
 from products.models import Product
+from eCommerce.utils import MessageMixin
 
 
-class HomeTemplateView(TemplateView):
+class HomeTemplateView(TemplateView, MessageMixin):
     template_name = 'eCommerce/home.html'
+    message = 'WELCOME'
+
+    def get_context_data(self, **kwargs):
+        super(HomeTemplateView, self).get_context_data()
+        self.send_message(self.request, default_messages=False)
 
 
 class SearchProductListView(ListView):
