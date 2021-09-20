@@ -1,7 +1,9 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from accounts.forms import LoginForm
-from carts.utils import get_cart_from_session, get_cart, get_cart_id
+from billing.models import BillingProfile
+from carts.utils import get_cart
 from carts.models import Cart
 from orders.models import Order
 from products.models import Product
@@ -23,15 +25,17 @@ def cart_home(request, cart):
 
 
 @get_cart
+@login_required
 def checkout(request, cart):
-    order = Order.objects.get(cart=cart)
-    form = LoginForm(request.POST or None)
-    billing_profile = None
+    if cart.products.count() is 0:
+        messages.error(request, 'Your cart is empty')
+        return redirect('carts:home')
+
+    billing_profile = BillingProfile.objects.get(user=request.user)
+    billing_profile.calculate_total(request.user)
 
     context = {
-        'order': order,
         'cart': cart,
-        'login_form': form,
         'billing_profile': billing_profile,
     }
     return render(request, 'carts/checkout.html', context)
