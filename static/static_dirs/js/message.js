@@ -11,6 +11,8 @@ $(document).ready(function () {
             toast.children('.toast-body').css('background-color', 'red');
         }
     }
+    setTimeout(function() {
+        toasts.toast('show');
+    }, 1000)
 
-    toasts.toast('show');
 });
