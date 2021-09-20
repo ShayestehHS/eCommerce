@@ -48,6 +48,7 @@ def remove_product(request, cart):
     Cart.objects.remove_product(cart, product_id)
     update_cart_items_session(request, cart)
 
+    messages.success(request, 'Added to your cart.')
     # ToDo: request should be AJAX
     product = Product.objects.get(id=product_id)
     return redirect(product.get_absolute_url())
@@ -60,6 +61,7 @@ def add_product(request, cart):
     Cart.objects.add_product(cart, product_id)
     update_cart_items_session(request, cart)
 
+    messages.error(request, 'Removed from your cart.')
     # ToDo: request should be AJAX
     product = Product.objects.get(id=product_id)
     return redirect(product.get_absolute_url())
