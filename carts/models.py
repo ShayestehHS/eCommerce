@@ -58,17 +58,12 @@ class Cart(models.Model):
                              blank=True, null=True)
     products = models.ManyToManyField(Product,
                                       blank=True)
-    subtotal = models.DecimalField(max_digits=7, decimal_places=2, default=0,
+    shipping_total = models.DecimalField(max_digits=7, decimal_places=2, default=0,
                                    help_text='Maximum subtotal is 99999.99')
-    total = models.DecimalField(max_digits=7, decimal_places=2, default=0,
-                                help_text='Maximum total is 99999.99')
     last_update = models.DateTimeField(auto_now=True)
     crated = models.DateTimeField(auto_now_add=True)
 
     objects = CartManager()
-
-    def save(self, *args, **kwargs):
-        super(Cart, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"cart {self.id}"
