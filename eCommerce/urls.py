@@ -32,6 +32,9 @@ urlpatterns = [
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 if settings.DEBUG:
     urlpatterns += [path('__debug__/', include(debug_toolbar_url))]
+
+admin.site.site_header = "eCommerce"
+admin.site.site_title = "eCommerce"
+admin.site.index_title = "Admin page"
