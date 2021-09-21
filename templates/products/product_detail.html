@@ -15,10 +15,9 @@
         <ul>
             <li>Price: ${{ product.price }}</li>
             <li>is_featured: {{ product.is_featured }}</li>
-            <li>is_active: {{ product.is_active }}</li>
             <li>Description: {{ product.description|linebreaks }}</li>
         </ul>
-        {% if product.id in cart.products.all_id %}
+        {% if in_cart %}
             {% include 'carts/snippets/remove_product_form.html' with product=product is_add=True %}
         {% else %}
             {% include 'carts/snippets/add_product_form.html' with product=product %}
