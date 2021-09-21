@@ -1,11 +1,8 @@
-from django.db.models.signals import m2m_changed, post_save, pre_save
+from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import receiver
 
-from decimal import Decimal
-
 from carts.models import Cart
-
-Tax = 0.08
+from orders.models import Order
 
 
 @receiver(m2m_changed, sender=Cart.products.through)
@@ -23,8 +20,7 @@ def m2m_changed_cart_receiver(instance, action, *args, **kwargs):
             pass
 
 
-
-@receiver(pre_save, sender=Cart)
-def cart_pre_save(sender, instance, **kwargs):
-    if instance.subtotal is not 0:
-        instance.total = Decimal(instance.subtotal) * Decimal(1 + Tax)
+@receiver(post_save, sender=Cart)
+def cart_post_save(instance, created, *args, **kwargs):
+    if created:
+        Order.objects.create(cart=instance)
