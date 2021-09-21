@@ -51,11 +51,13 @@ class CartManager(models.Manager):
 
         return obj, is_new
 
-    def remove_product(self, cart, product_id):
+    @staticmethod
+    def remove_product(cart, product_id):
         product_obj = get_product(product_id)
         cart.products.remove(product_obj)
 
-    def add_product(self, cart, product_id):
+    @staticmethod
+    def add_product(cart, product_id):
         product_obj = get_product(product_id)
         cart.products.add(product_obj)
 
