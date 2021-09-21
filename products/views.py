@@ -17,10 +17,16 @@ class ProductListView(ListView):
 
 
 class ProductDetailView(DetailView):
-    queryset = Product.objects.all()
+    template_name = 'products/product_detail.html'
     context_object_name = 'product'
+    queryset = Product.objects.all()
+
+    def get_queryset(self):
+        qs = self.queryset.defer('is_active', 'slug')
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(ProductDetailView, self).get_context_data(**kwargs)
-        context['cart'] = utils.get_cart_from_session(self.request)
+        cart = utils.get_cart_from_session(self.request)
+        context['in_cart'] = self.object.id in cart.products.all_id()
         return context
