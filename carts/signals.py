@@ -9,15 +9,18 @@ Tax = 0.08
 
 
 @receiver(m2m_changed, sender=Cart.products.through)
-def m2m_changed_cart_receiver(sender, instance, action, **kwargs):
+def m2m_changed_cart_receiver(instance, action, *args, **kwargs):
     if 'post_' in action:  # post_save || post_remove || post_clear
-        subtotal = 0
+        shipping_total = 0
         for product in instance.products.all():
-            subtotal += product.price
+            shipping_total += product.price
 
-        instance.subtotal = subtotal
-        instance.save(update_fields=['subtotal', 'total'])
-
+        instance.shipping_total = shipping_total
+        instance.save(update_fields=['shipping_total'])
+        try:
+            instance.billing_profile.calculate_total(instance)
+        except instance._meta.model.billing_profile.RelatedObjectDoesNotExist:
+            pass
 
 
 
