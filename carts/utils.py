@@ -1,5 +1,3 @@
-from django.shortcuts import redirect
-
 from functools import wraps
 
 from carts.models import Cart
@@ -27,20 +25,23 @@ def get_cart_from_session(request):
     cart_id = get_cart_id(request=request)
     cart_obj, is_new = Cart.objects.get_or_new(request=request, id=cart_id)
 
-    if cart_obj.user_id is None:
-        if request.user.is_authenticated:
-            cart_obj.user_id = request.user.id
-            cart_obj.save()
-
     return cart_obj
 
 
 def get_cart(view):
     @wraps(view)
     def _wrapped_view(request, *args, **kwargs):
-        cart_id = get_cart_id(request)
 
-        kwargs['cart'], is_new = Cart.objects.get_or_new(id=cart_id, request=request)
+        kwargs['cart'] = get_cart_from_session(request)
+
         return view(request, *args, **kwargs)
 
     return _wrapped_view
+
+
+def update_session(request, cart=None):
+    if cart is None:
+        cart = Cart.objects.get(user=request.user, is_active=True)
+
+    request.session['cart_id'] = cart.id
+    request.session['cart_items'] = 0

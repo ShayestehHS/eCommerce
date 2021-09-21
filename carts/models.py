@@ -25,9 +25,14 @@ def get_product(product_id):
 
 
 class CartManager(models.Manager):
-    def new(self, user=None):
+    def new(self, user=None, request=None):
         user = user if user and user.is_authenticated else None
         cart = self.model.objects.create(user=user)
+
+        if request is not None:
+            request.session['cart_id'] = cart.id
+            request.session['cart_items'] = 0
+
         return cart
 
     def get_or_new(self, request, **kwargs):
@@ -35,12 +40,14 @@ class CartManager(models.Manager):
         try:
             obj, is_new = self.model.objects.get(**kwargs), False
         except self.model.DoesNotExist:
-            user = user if user.is_authenticated else None
-            obj, is_new = self.model.objects.new(user=user), True
+            obj, is_new = self.model.objects.new(user=user, request=request), True
 
-        if is_new:
-            request.session['cart_id'] = obj.id
-            request.session['cart_items'] = 0
+        # Set the user for not_created carts and delete duplicated carts by same user
+        if not is_new and obj.user_id is None and request.user.is_authenticated:
+            Cart.objects.exclude(id=obj.id).delete()
+
+            obj.user_id = request.user.id
+            obj.save(update_fields=['user'])
 
         return obj, is_new
 
@@ -54,19 +61,15 @@ class CartManager(models.Manager):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             blank=True, null=True)
-    products = models.ManyToManyField(Product,
-                                      blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    products = models.ManyToManyField(Product, blank=True)
     shipping_total = models.DecimalField(max_digits=7, decimal_places=2, default=0,
-                                   help_text='Maximum subtotal is 99999.99')
+                                         help_text='Maximum subtotal is 99999.99')
     last_update = models.DateTimeField(auto_now=True)
     crated = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     objects = CartManager()
 
     def __str__(self):
         return f"cart {self.id}"
-
-
-
