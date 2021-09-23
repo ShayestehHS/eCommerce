@@ -15,12 +15,9 @@ def m2m_changed_cart_receiver(instance, action, *args, **kwargs):
         instance.shipping_total = shipping_total
         instance.save(update_fields=['shipping_total'])
         try:
-            instance.billing_profile.calculate_total(instance)
-        except instance._meta.model.billing_profile.RelatedObjectDoesNotExist:
+            order = Order.objects.get(user_id=instance.user_id)
+            instance.set_cart_to_order(order)
+        except:
             pass
 
 
-@receiver(post_save, sender=Cart)
-def cart_post_save(instance, created, *args, **kwargs):
-    if created:
-        Order.objects.create(cart=instance)
