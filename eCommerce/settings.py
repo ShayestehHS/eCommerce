@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     # Our apps
     'accounts.apps.AccountsConfig',
-    'billing.apps.BillingConfig',
     'products.apps.ProductsConfig',
     'carts.apps.CartsConfig',
     'orders.apps.OrdersConfig',
