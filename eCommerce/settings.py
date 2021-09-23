@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # Our apps
     'accounts.apps.AccountsConfig',
+    'address.apps.AddressConfig',
     'products.apps.ProductsConfig',
     'carts.apps.CartsConfig',
     'orders.apps.OrdersConfig',
@@ -138,6 +139,8 @@ else:
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'accounts/login/'
+
 if DEBUG:
     import mimetypes
     from django.urls import path, include
