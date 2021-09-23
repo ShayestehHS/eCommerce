@@ -56,14 +56,9 @@ def checkout(request, cart):
         messages.error(request, 'Your cart is empty')
         return redirect('carts:home')
 
-    billing_profile, in_new = BillingProfile.objects.get_or_create(cart=cart,
-                                                                   is_active=True)
-    billing_profile.calculate_total(cart)
-
     context = {
         'cart': cart,
-        'billing_profile': billing_profile,
-        'address_form': AddressForm(request.POST or None),
+        'form': AddressForm(request.POST or None),
     }
     return render(request, 'carts/checkout.html', context)
 
