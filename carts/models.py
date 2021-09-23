@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+from eCommerce.utils import update_session
 from products.models import Product
 
 User = settings.AUTH_USER_MODEL
@@ -36,19 +37,13 @@ class CartManager(models.Manager):
         update_session(request, cart,is_new=True)
         return cart
 
-    def get_or_new(self, request, **kwargs):
-        user = request.user
+    def get_or_new(self, request, id, **kwargs):
         try:
-            obj, is_new = self.model.objects.get(**kwargs), False
+            obj = self.model.objects.get(id=id, **kwargs)
+            is_new = False
         except self.model.DoesNotExist:
-            obj, is_new = self.model.objects.new(user=user, request=request), True
-
-        # Set the user for not_created carts and delete duplicated carts by same user
-        if not is_new and obj.user_id is None and request.user.is_authenticated:
-            Cart.objects.exclude(id=obj.id).delete()
-
-            obj.user_id = request.user.id
-            obj.save(update_fields=['user'])
+            obj = self.model.objects.new(request=request, **kwargs)
+            is_new = True
 
         return obj, is_new
 
