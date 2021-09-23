@@ -59,15 +59,27 @@ class CartManager(models.Manager):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             blank=True, null=True)
     products = models.ManyToManyField(Product, blank=True)
-    shipping_total = models.DecimalField(max_digits=7, decimal_places=2, default=0,
-                                         help_text='Maximum subtotal is 99999.99')
+    total = models.DecimalField(max_digits=7, decimal_places=2, default=0,
+                                help_text='Maximum subtotal is 99999.99')
+    subtotal = models.DecimalField(max_digits=7, decimal_places=2, default=0,
+                                   help_text='Maximum subtotal is 99999.99')
     last_update = models.DateTimeField(auto_now=True)
     crated = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
     objects = CartManager()
+
+    def set_cart_to_order(self, order):
+        order.cart_id = self.id
+        order.total = self.total
+        order.save(update_fields=['total', 'cart_id'])
+
+    @staticmethod
+    def calculate_total(subtotal):
+        return Decimal(subtotal) * Decimal(1.08)
 
     def __str__(self):
         return f"cart {self.id}"
