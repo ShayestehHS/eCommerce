@@ -6,7 +6,7 @@ from address.models import Address
 class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
-        exclude = ('address_type',)
+        exclude = ('address_type', 'user')
         widgets = {
             'address_1': forms.TextInput(attrs={'placeholder': 'Required'}),
             'address_2': forms.TextInput(attrs={'placeholder': 'Not required'})
