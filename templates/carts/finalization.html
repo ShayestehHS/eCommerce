@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Finalization{% endblock title %}
+
+{% block content %}
+
+    <p>Subtotal: {{ cart.subtotal }}</p>
+    <p>Total: {{ cart.total|floatformat:"2" }}</p>
+
+{% endblock content %}

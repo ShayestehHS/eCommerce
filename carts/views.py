@@ -73,12 +73,37 @@ def address_create(request, cart):
         messages.error(request, 'Your form is not valid.')
         return redirect('carts:checkout')
 
-    form = form.save(commit=False)
-    form.billing_profile = BillingProfile.objects.get(cart=cart)
-    form.save()
+    bill_sipp_type = request.POST['address_type']  # shipping || billing
+    address = form.save(commit=False)
+    address.user = request.user
+    address.cart = cart
+    address.address_type = bill_sipp_type
+    address.save()
+
+    order, is_new = Order.objects.get_or_create(cart=cart, user=request.user)
+    setattr(order, f'address_{bill_sipp_type}', address)
+    order.save(update_fields=[f'address_{bill_sipp_type}'])
 
     messages.success(request, 'Your address is save successfully')
     if not is_valid_url(request, next_page):
         return redirect('carts:checkout')
 
     return redirect(next_page)
+
+
+@get_cart
+def finalization(request, cart):
+    order = Order.objects.get(cart=cart)
+
+    if not order.check_done():  # address_shipping and address_billing is exists
+        messages.error(request, 'You have to fill both of'
+                                ' billing and shipping addresses.')
+        return redirect('carts:home')
+
+    is_deactivated = order.deactivate_cart(request, checked=True)
+    if not is_deactivated:
+        messages.error(request, 'Something bad is happening,'
+                                'Please contact to us')
+        return redirect('carts:home')
+
+    return render(request, 'carts/finalization.html')
