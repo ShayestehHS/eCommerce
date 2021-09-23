@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from billing.models import BillingProfile
-from billing.forms import AddressForm
+from orders.models import Order
+from orders.forms import AddressForm
 from carts.utils import get_cart
 from carts.models import Cart
 from eCommerce.utils import is_valid_url
@@ -13,9 +13,12 @@ from products.models import Product
 @get_cart
 def cart_home(request, cart):
     products = cart.products.values('id', 'name', 'price')
+    total = Cart.objects.filter(id=cart.id).values_list('total', flat=True)
+
     context = {
         'cart': cart,
-        'products': products
+        'total': total.first(),
+        'products': products,
     }
     return render(request, 'carts/cart_home.html', context)
 
