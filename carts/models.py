@@ -25,14 +25,15 @@ def get_product(product_id):
 
 
 class CartManager(models.Manager):
-    def new(self, user=None, request=None):
-        user = user if user and user.is_authenticated else None
-        cart = self.model.objects.create(user=user)
+    def new(self, request, **kwargs):
+        user = request.user if request.user.is_authenticated else None
+        cart = self.model.objects.create(user=user, **kwargs)
 
-        if request is not None:
-            request.session['cart_id'] = cart.id
-            request.session['cart_items'] = 0
+        old_cart_id = request.session.get('cart_id')
+        if old_cart_id:
+            self.model.objects.filter(id=old_cart_id, user=None).delete()
 
+        update_session(request, cart,is_new=True)
         return cart
 
     def get_or_new(self, request, **kwargs):
