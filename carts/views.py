@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from orders.models import Order
@@ -63,10 +64,10 @@ def checkout(request, cart):
     return render(request, 'carts/checkout.html', context)
 
 
+@login_required
 @get_cart
-def address_create(request, cart):
+def set_address_to_order(request, cart):
     form = AddressForm(request.POST)
-    next_page = request.POST.get('next')
     if not form.is_valid():
         messages.error(request, 'Your form is not valid.')
         return redirect('carts:checkout')
@@ -82,10 +83,16 @@ def address_create(request, cart):
     setattr(order, f'address_{bill_sipp_type}', address)
     order.save(update_fields=[f'address_{bill_sipp_type}'])
 
-    messages.success(request, 'Your address is save successfully')
+    msg = f'Your {bill_sipp_type} address is saved successfully'
+    messages.success(request, msg)
+
+    if order.check_done():
+        return redirect('carts:finalization')
+
+    messages.error(request, 'one address is available to fill')
+    next_page = request.POST.get('next')
     if not is_valid_url(request, next_page):
         return redirect('carts:checkout')
-
     return redirect(next_page)
 
 
