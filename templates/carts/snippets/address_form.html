@@ -1,0 +1,101 @@
+<form action="{% url 'carts:address_create' %}" method="POST"
+      class="form-group">
+    <input type="hidden" name="next" value=""> {# ToDo: set next #}
+    <input type="hidden" name="address_type"
+           value="{% if is_shipping %}shipping{% else %}billing{% endif %}">
+    {% csrf_token %}
+    <div>
+        {{ form.address_1.label_tag }}
+        {{ form.address_1 }}
+        <small>{{ form.address_1.error }}</small>
+    </div>
+    <br>
+    <div>
+        {{ form.address_2.label_tag }}
+        {{ form.address_2 }}
+        <small>{{ form.address_2.error }}</small>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12 col-md-3">
+            {{ form.country.label_tag }}
+            {{ form.country }}
+            <small>{{ form.country.error }}</small>
+        </div>
+        <div class="col-12 col-md-3">
+            {{ form.city.label_tag }}
+            {{ form.city }}
+            <small>{{ form.city.error }}</small>
+        </div>
+        <div class="col-12 col-md-3">
+            {{ form.state.label_tag }}
+            {{ form.state }}
+            <small>{{ form.state.error }}</small>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12 col-md-3">
+            {{ form.phone_number.label_tag }}
+            {{ form.phone_number }}
+            <small>{{ form.phone_number.error }}</small>
+        </div>
+        <div class="col-12 col-md-3">
+            {{ form.postal_code.label_tag }}
+            {{ form.postal_code }}
+            <small>{{ form.phone_number.error }}</small>
+        </div>
+    </div>
+    <br>
+    <input type="submit" value="Submit" class="btn btn-success">
+        <button type="button" class="btn btn-primary"
+                data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Available addresses
+        </button>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                sed do eiusmod tempor incididunt ut labore
+                et dolore magna aliqua. Ut enim ad minim veniam, quis
+                nostrud exercitation ullamco laboris nisi
+                ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                occaecat cupidatat non proident, sunt in culpai
+                ui officia deserunt mollit anim id est laborum.
+                Sed ut perspiciatis unde omnis iste natus error sit
+                voluptatem accusantium doloremque laudantium,
+                totam rem aperiam, eaque ipsa quae ab illo inventore
+                veritatis et quasi architecto beatae vitae dicta
+                sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
+                sit aspernatur aut odit aut fugit, sed quia
+                consequuntur magni dolores eos qui ratione voluptatem sequi
+                nesciunt. Neque porro quisquam est,
+                qui dolorem ipsum quia dolor sit amet, consectetur,
+                adipisci velit, sed quia non numquam eius modi
+                tempora incidunt ut labore et dolore magnam aliquam quaerat
+                voluptatem. Ut enim ad minima veniam,
+                quis nostrum exercitationem ullam corporis suscipit
+                laboriosam, nisi ut aliquid ex ea commodi consequatur?
+                Quis autem vel eum iure reprehenderit qui in ea voluptate
+                velit esse quam nihil molestiae consequatur,
+                vel illum qui dolorem eum fugiat quo voluptas nulla
+                pariatur?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
