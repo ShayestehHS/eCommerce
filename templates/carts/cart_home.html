@@ -6,7 +6,7 @@
 {% block content %}
     <h1>Cart</h1>
     <div class="container">
-        {% if products.count is not 0 %}
+        {% if products %}
             <table class="table">
                 <thead>
                 <tr>
@@ -33,15 +33,12 @@
                 <tr>
                     <th colspan="1"></th>
                     <th scope="row">Total</th>
-                    <td colspan="2">{{ cart.total }}</td>
-                </tr>
-                <tr>
-                    <th colspan="3"></th>
-                    <td ><a href="{% url 'carts:checkout' %}"
-                    class="btn btn-primary">Checkout</a></td>
+                    <td colspan="2">{{ total }}</td>
                 </tr>
                 </tbody>
             </table>
+            <a href="{% url 'carts:checkout' %}"
+               class="btn btn-primary">Checkout</a>
         {% else %}
             <h3>Your cart is empty</h3>
             {% if not request.user.is_authenticated %}
