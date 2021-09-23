@@ -11,7 +11,9 @@ TYPE_CHOICES = (
 
 
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
+                                null=True,
+                                blank=True)
     address_type = models.CharField(max_length=8, choices=TYPE_CHOICES)
     address_1 = models.CharField(max_length=127)
     address_2 = models.CharField(max_length=127, blank=True, null=True)
