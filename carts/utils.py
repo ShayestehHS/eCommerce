@@ -1,9 +1,10 @@
 from functools import wraps
 
 from carts.models import Cart
+from eCommerce.utils import update_session
 
 
-def get_cart_id(request, cart_id=None):
+def get_cart_id_from_session(request, cart_id=None):
     """
         return:
             if valid => cart_id
@@ -22,7 +23,16 @@ def get_cart_id(request, cart_id=None):
 
 
 def get_cart_from_session(request):
-    cart_id = get_cart_id(request=request)
+    user = request.user if request.user.is_authenticated else None
+    if user:
+        user_cart = Cart.objects.filter(user=user, is_active=True)
+        if user_cart.exists():
+            user_cart = user_cart.first()
+            update_session(request, user_cart)
+            return user_cart
+
+
+    cart_id = get_cart_id_from_session(request=request)
     cart_obj, is_new = Cart.objects.get_or_new(request=request, id=cart_id)
 
     return cart_obj
@@ -31,7 +41,6 @@ def get_cart_from_session(request):
 def get_cart(view):
     @wraps(view)
     def _wrapped_view(request, *args, **kwargs):
-
         kwargs['cart'] = get_cart_from_session(request)
 
         return view(request, *args, **kwargs)
@@ -39,9 +48,4 @@ def get_cart(view):
     return _wrapped_view
 
 
-def update_session(request, cart=None):
-    if cart is None:
-        cart = Cart.objects.get(user=request.user, is_active=True)
 
-    request.session['cart_id'] = cart.id
-    request.session['cart_items'] = 0
