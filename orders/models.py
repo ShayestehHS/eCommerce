@@ -16,16 +16,16 @@ ORDER_STATUS_CHOICES = (
 
 
 class Order(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
                                 null=True,
                                 blank=True)  # ToDo: Delete this line
     cart = models.OneToOneField(to=Cart, on_delete=models.CASCADE,
                                 related_name='order')
     order_id = models.CharField(max_length=10, editable=False, blank=True)
-    address_shipping = models.OneToOneField(Address, on_delete=models.CASCADE,
+    address_shipping = models.ForeignKey(Address, on_delete=models.CASCADE,
                                             related_name='address_shipping',
                                             null=True, blank=True)
-    address_billing = models.OneToOneField(Address, on_delete=models.CASCADE,
+    address_billing = models.ForeignKey(Address, on_delete=models.CASCADE,
                                            related_name='address_billing',
                                            null=True, blank=True)
     status = models.CharField(choices=ORDER_STATUS_CHOICES,
@@ -36,11 +36,10 @@ class Order(models.Model):
 
     def check_done(self):
         order = self
-        total = self.total
         address_shipping_exists = bool(order.address_shipping_id)
         address_billing_exists = bool(order.address_billing_id)
 
-        if total > 0 and address_shipping_exists and address_billing_exists:
+        if address_shipping_exists and address_billing_exists:
             return True
         return False
 
@@ -51,6 +50,10 @@ class Order(models.Model):
 
         user_id = self.user_id
         cart = self.cart
+
+        self.status = 'paid'
+        self.total = cart.total
+        self.save(update_fields=['status', 'total'])
 
         cart.is_active = False
         cart.save(update_fields=['is_active'])
