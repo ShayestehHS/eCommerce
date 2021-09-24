@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock title %}</title>
     {% include 'base/css.html' %}
+    {% block css %}{% endblock css %}
 </head>
 <body>
 {% include 'base/navbar.html' %}
@@ -13,10 +14,11 @@
     {% block content %}{% endblock content %}
 </div>
 
-{% if messages %}
+
     {% include 'base/message.html' with messages=messages %}
-{% endif %}
+
 
 </body>
 {% include 'base/js.html' %}
+{% block js %}{% endblock js %}
 </html>
