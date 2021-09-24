@@ -13,11 +13,10 @@ from products.models import Product
 @get_cart
 def cart_home(request, cart):
     products = cart.products.values('id', 'name', 'price')
-    total = Cart.objects.filter(id=cart.id).values_list('total', flat=True)
 
     context = {
         'cart': cart,
-        'total': total.first(),
+        'total': cart.total,
         'products': products,
     }
     return render(request, 'carts/cart_home.html', context)
@@ -56,8 +55,13 @@ def checkout(request, cart):
         messages.error(request, 'Your cart is empty')
         return redirect('carts:home')
 
+    order, is_new = Order.objects.get_or_create(cart=cart, user=request.user)
+    if order.status == 'created':
+        order.status = 'shipped'
+        order.save(update_fields=['status'])
+
     context = {
-        'cart': cart,
+        'order': order,
         'form': AddressForm(request.POST or None),
     }
     return render(request, 'carts/checkout.html', context)
@@ -74,7 +78,6 @@ def set_address_to_order(request, cart):
     bill_sipp_type = request.POST['address_type']  # shipping || billing
     address = form.save(commit=False)
     address.user = request.user
-    address.cart = cart
     address.address_type = bill_sipp_type
     address.save()
 
@@ -97,17 +100,33 @@ def set_address_to_order(request, cart):
 
 @get_cart
 def finalization(request, cart):
-    order = Order.objects.get(cart=cart)
+    order = Order.objects.get(cart=cart, status='shipped')
 
     if not order.check_done():  # address_shipping and address_billing is exists
-        messages.error(request, 'You have to fill both of'
-                                ' billing and shipping addresses.')
+        messages.error(request, 'You have to fill both of billing and shipping addresses.')
+        return redirect('carts:home')
+
+    order.total = cart.total
+    order.save(update_fields=['total'])
+    context = {
+        'order': order,
+        'cart': cart,
+    }
+    return render(request, 'carts/finalization.html', context)
+
+@get_cart
+def done(request,cart):
+    order = Order.objects.get(cart=cart, status='shipped')
+
+    if not order.check_done():  # address_shipping and address_billing is exists
+        messages.error(request, 'You have to fill both of billing and shipping addresses.')
         return redirect('carts:home')
 
     is_deactivated = order.deactivate_cart(request, checked=True)
     if not is_deactivated:
-        messages.error(request, 'Something bad is happening,'
-                                'Please contact to us')
+        messages.error(request,
+                       'Something bad is happening, Please contact to us')
         return redirect('carts:home')
 
-    return render(request, 'carts/finalization.html')
+    messages.success(request, 'Please wait for the doorbell to ring😎')
+    return redirect('home')
