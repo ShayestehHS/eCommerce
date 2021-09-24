@@ -30,5 +30,8 @@ def is_valid_url(request, url, require_https=False):
 
 
 def update_session(request, cart, is_new=False):
-    request.session['cart_id'] = cart.id
-    request.session['cart_items'] = cart.products.count() if not is_new else 0
+    session_id = request.session['cart_id']
+    cart_id = cart.id
+    if is_new or session_id != cart_id:
+        request.session['cart_id'] = cart_id
+        request.session['cart_items'] = cart.products.count()
