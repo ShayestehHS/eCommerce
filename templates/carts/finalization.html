@@ -6,5 +6,9 @@
 
     <p>Subtotal: {{ cart.subtotal }}</p>
     <p>Total: {{ cart.total|floatformat:"2" }}</p>
+    <form action="{% url 'carts:done' %}">
+        <input type="hidden" name="order_id" value="{{ order.id }}">
+        <input type="submit" value="Done">
+    </form>
 
 {% endblock content %}

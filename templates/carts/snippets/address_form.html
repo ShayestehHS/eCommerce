@@ -1,12 +1,13 @@
-<form action="{% url 'carts:address_create' %}" method="POST"
+<form action="{% url 'carts:set_address' %}" method="POST" id="Address_form_{{ ship_bill }}"
       class="form-group">
     <input type="hidden" name="next" value=""> {# ToDo: set next #}
     <input type="hidden" name="address_type"
-           value="{% if is_shipping %}shipping{% else %}billing{% endif %}">
+           value="{{ ship_bill }}">
     {% csrf_token %}
     <div>
         {{ form.address_1.label_tag }}
         {{ form.address_1 }}
+        {# ToDo: Error is not shownig #}
         <small>{{ form.address_1.error }}</small>
     </div>
     <br>
@@ -47,50 +48,26 @@
         </div>
     </div>
     <br>
-    <input type="submit" value="Submit" class="btn btn-success">
-        <button type="button" class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Available addresses
-        </button>
 </form>
+<form action="{% url 'address:list' %}" method="GET" data-type="{{ ship_bill }}"
+      id="address_list_{{ ship_bill }}" class="form_address_list">
+    <input type="hidden" name="address_type" value="{{ ship_bill }}">
+</form>
+
+<input type="submit" value="Submit" class="btn btn-success" form="Address_form_{{ ship_bill }}">
+<input type="submit" value="Available addresses" class="btn btn-primary"
+       form="address_list_{{ ship_bill }}">
+
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1"
+<div class="modal fade" id="modal_{{ ship_bill }}" tabindex="-1"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title">Modal title</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore
-                et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi
-                ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                occaecat cupidatat non proident, sunt in culpai
-                ui officia deserunt mollit anim id est laborum.
-                Sed ut perspiciatis unde omnis iste natus error sit
-                voluptatem accusantium doloremque laudantium,
-                totam rem aperiam, eaque ipsa quae ab illo inventore
-                veritatis et quasi architecto beatae vitae dicta
-                sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-                sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt. Neque porro quisquam est,
-                qui dolorem ipsum quia dolor sit amet, consectetur,
-                adipisci velit, sed quia non numquam eius modi
-                tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem. Ut enim ad minima veniam,
-                quis nostrum exercitationem ullam corporis suscipit
-                laboriosam, nisi ut aliquid ex ea commodi consequatur?
-                Quis autem vel eum iure reprehenderit qui in ea voluptate
-                velit esse quam nihil molestiae consequatur,
-                vel illum qui dolorem eum fugiat quo voluptas nulla
-                pariatur?
-            </div>
+            <div class="modal-body"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     Close
