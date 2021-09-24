@@ -74,10 +74,6 @@ class Cart(models.Model):
 
     objects = CartManager()
 
-    def set_cart_to_order(self, order):
-        order.cart_id = self.id
-        order.total = self.total
-        order.save(update_fields=['total', 'cart_id'])
 
     @staticmethod
     def calculate_total(subtotal):
