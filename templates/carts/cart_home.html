@@ -22,7 +22,7 @@
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ product.name }}</td>
                         <td>{{ product.price }} $</td>
-                        <td>{% include 'carts/snippets/remove_product_form.html' %}</td>
+                        <td>{% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=True %}</td>
                     </tr>
                 {% endfor %}
                 <tr>
