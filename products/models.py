@@ -2,7 +2,6 @@ import os
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
-from django.utils.text import slugify
 
 from taggit.managers import TaggableManager
 
@@ -13,7 +12,7 @@ def get_image_upload_path(instance, filename):
 
 class ProductQuerySet(models.query.QuerySet):
     def all_id(self):
-        return self.all().values_list('id',flat=True)
+        return self.all().values_list('id', flat=True)
 
     def featured(self):
         return self.filter(is_featured=True)
@@ -29,7 +28,6 @@ class ProductQuerySet(models.query.QuerySet):
 
 
 class ProductModelManager(models.Manager):
-
 
     def get_queryset(self):
         return ProductQuerySet(self.model, self._db)
