@@ -1,0 +1,9 @@
+<form method="POST" action="{% url 'carts:add_rmv' %}" id="form_rmv_add">
+    {% csrf_token %}
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    {% if in_cart %}
+        <input type="submit" class="btn btn-danger add_rmv" value="Remove from cart">
+    {% else %}
+        <input type="submit" class="btn btn-success add_rmv" value="Add to cart">
+    {% endif %}
+</form>

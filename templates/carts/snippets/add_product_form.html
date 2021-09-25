@@ -1,5 +1,0 @@
-<form action="{% url 'carts:add_product' %}" method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="product_id" value="{{ product.id }}">
-    <input type="submit" class="btn btn-success" value="Add to cart">
-</form>
