@@ -23,29 +23,18 @@ def cart_home(request, cart):
 
 
 @get_cart
-def remove_product(request, cart):
-    product_id = request.POST.get('product_id')
+def add_rmv_product(request, cart):
+    if not request.is_ajax:
+        return HttpResponseBadRequest
 
-    Cart.objects.remove_product(cart, product_id)
+    product_id = request.POST.get('product_id')
+    product, added = Cart.objects.add_or_remove_product(cart, product_id)
+
     request.session['cart_items'] = cart.products.count()
 
-    messages.error(request, 'Removed from your cart.')
-    # ToDo: request should be AJAX
-    product = Product.objects.get(id=product_id)
-    return redirect(product.get_absolute_url())
-
-
-@get_cart
-def add_product(request, cart):
-    product_id = request.POST.get('product_id')
-
-    Cart.objects.add_product(cart, product_id)
-    request.session['cart_items'] = cart.products.count()
-
-    messages.success(request, 'Added to your cart.')
-    # ToDo: request should be AJAX
-    product = Product.objects.get(id=product_id)
-    return redirect(product.get_absolute_url())
+    msg = 'Added to your cart.' if added else 'Removed from your cart.'
+    messages.success(request, msg)
+    return JsonResponse({'added': added, 'removed': not added})
 
 
 @get_cart

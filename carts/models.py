@@ -50,14 +50,17 @@ class CartManager(models.Manager):
         return obj, is_new
 
     @staticmethod
-    def remove_product(cart, product_id):
-        product_obj = get_product(product_id)
-        cart.products.remove(product_obj)
+    def add_or_remove_product(cart, product_id):
+        product_id = validate_id(product_id)
+        product_obj = get_product(product_id, is_valid=True)
 
-    @staticmethod
-    def add_product(cart, product_id):
-        product_obj = get_product(product_id)
-        cart.products.add(product_obj)
+        if product_id in cart.products.all_id():
+            cart.products.remove(product_obj)
+            added = False
+        else:
+            cart.products.add(product_obj)
+            added = True
+        return product_obj, added
 
 
 class Cart(models.Model):
