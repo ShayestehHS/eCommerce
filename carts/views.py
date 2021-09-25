@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 
 from orders.models import Order
@@ -7,7 +8,6 @@ from address.forms import AddressForm
 from carts.utils import get_cart
 from carts.models import Cart
 from eCommerce.utils import is_valid_url
-from products.models import Product
 
 
 @get_cart
@@ -103,8 +103,9 @@ def finalization(request, cart):
     }
     return render(request, 'carts/finalization.html', context)
 
+
 @get_cart
-def done(request,cart):
+def done(request, cart):
     order = Order.objects.get(cart=cart, status='shipped')
 
     if not order.check_done():  # address_shipping and address_billing is exists
@@ -113,8 +114,7 @@ def done(request,cart):
 
     is_deactivated = order.deactivate_cart(request, checked=True)
     if not is_deactivated:
-        messages.error(request,
-                       'Something bad is happening, Please contact to us')
+        messages.error(request, 'Something bad is happening, Please contact to us')
         return redirect('carts:home')
 
     messages.success(request, 'Please wait for the doorbell to ring😎')
