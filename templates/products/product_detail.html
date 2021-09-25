@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ product.name }}{% endblock title %}
 
@@ -17,10 +18,11 @@
             <li>is_featured: {{ product.is_featured }}</li>
             <li>Description: {{ product.description|linebreaks }}</li>
         </ul>
-        {% if in_cart %}
-            {% include 'carts/snippets/remove_product_form.html' with product=product is_add=True %}
-        {% else %}
-            {% include 'carts/snippets/add_product_form.html' with product=product %}
-        {% endif %}
+        {% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=in_cart %}
+
     </div>
 {% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/product_detail.js' %}"></script>
+{% endblock js %}
