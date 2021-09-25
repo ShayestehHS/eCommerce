@@ -5,26 +5,9 @@ from django.conf import settings
 
 from eCommerce.utils import update_session
 from products.models import Product
+from products.utils import get_product, validate_id
 
 User = settings.AUTH_USER_MODEL
-
-
-def get_product(product_id):
-    """ Get product with validated product_id """
-    if product_id is None:
-        raise ValueError('Product id is "None"')
-
-    try:
-        product_id = int(product_id)
-    except ValueError:
-        raise ValueError('Product id is not Integer')
-
-    try:
-        obj = Product.objects.get(id=product_id)
-    except Product.DoesNotExist:
-        raise ValueError(f'Product with id {product_id} is not exists')
-
-    return obj
 
 
 class CartManager(models.Manager):
@@ -36,7 +19,7 @@ class CartManager(models.Manager):
         if old_cart_id:
             self.model.objects.filter(id=old_cart_id, user=None).delete()
 
-        update_session(request, cart,is_new=True)
+        update_session(request, cart, is_new=True)
         return cart
 
     def get_or_new(self, request, id, **kwargs):
@@ -76,7 +59,6 @@ class Cart(models.Model):
     is_active = models.BooleanField(default=True)
 
     objects = CartManager()
-
 
     @staticmethod
     def calculate_total(subtotal):
