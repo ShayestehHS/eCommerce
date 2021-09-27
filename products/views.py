@@ -1,12 +1,14 @@
 from django.views.generic import ListView, DetailView
 
 from carts import utils
+from carts.models import Cart
 from products.models import Product
 
 
 class ProductListView(ListView):
     queryset = Product.objects.all()
     context_object_name = 'products'
+    template_name = 'products/product_list.html'
 
     def get_queryset(self):
         queryset = self.queryset \
@@ -14,6 +16,15 @@ class ProductListView(ListView):
             .defer('is_featured', 'is_active', 'timestamp')
 
         return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ProductListView, self).get_context_data(*args, **kwargs)
+        try:
+            cart = Cart.objects.get(user=self.request.user, is_active=True)
+            context['all_id'] = cart.products.all_id()
+        except (Cart.DoesNotExist, TypeError) as e:
+            pass
+        return context
 
 
 class ProductDetailView(DetailView):
