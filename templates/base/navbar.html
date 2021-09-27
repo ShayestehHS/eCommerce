@@ -46,11 +46,10 @@
                         {% if request.path == carts_url %}active{% endif %}"
                            href="{{ carts_url }}">Cart
                             {% with request.session.cart_items as cart_count %}
-                                {% if cart_count %}
-                                    <span class="position-absolute top-0 start-100
-                                    translate-middle badge rounded-pill bg-success">{{ request.session.cart_items }}
-                                    </span>
-                                {% endif %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success
+                                cart_items" {% if not cart_count %}hidden{% endif %}>
+                                    {{ cart_count }}
+                                </span>
                             {% endwith %}
 
                         </a>
@@ -62,26 +61,27 @@
                            data-bs-toggle="dropdown" aria-expanded="false">
                             Dropdown
                         </a>
-                        <ul class="dropdown-menu"
-                            aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item" href="#">Action</a>
                             </li>
-                            <li><a class="dropdown-item" href="#">Another
-                                action</a></li>
+                            <li>
+                                <a class="dropdown-item" href="#">Another action</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Something
-                                else
-                                here</a></li>
+                            <li>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
-                <form action="{% url 'search' %}" class="d-flex" method="GET">
+                <form action="{% url 'search' %}" method="GET"
+                      class="d-flex" id="form-search" data-ajax-url="{% url 'search_ajax' %}">
                     <input class="form-control me-2" type="search"
                            placeholder="Search" aria-label="Search"
                            name="q" value="{{ request.GET.q }}">
-                    <button class="btn btn-outline-success" type="submit">
+                    <button class="btn btn-outline-success" id="srch-btn" type="submit">
                         Search
                     </button>
                 </form>
