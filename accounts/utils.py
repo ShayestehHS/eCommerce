@@ -10,7 +10,8 @@ def set_cart_to_user(request):
         user_cart = Cart.objects.filter(user=request.user, is_active=True)
         if not user_cart.exists():
             user_cart = Cart.objects.new(request=request)
-
+        else:
+            user_cart = user_cart.first()
         update_session(request, user_cart)
         return True
 
