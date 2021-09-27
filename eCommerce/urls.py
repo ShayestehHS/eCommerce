@@ -24,6 +24,7 @@ from debug_toolbar import urls as debug_toolbar_url
 urlpatterns = [
     path('', views.HomeTemplateView.as_view(), name='home'),
     path('search/', views.SearchProductListView.as_view(), name='search'),
+    path('search_ajax/', views.search_by_ajax, name='search_ajax'),
 
     path('admin/', admin.site.urls),
     path('products/', include('products.urls', namespace='products')),
