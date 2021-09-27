@@ -7,7 +7,7 @@ from orders.models import Order
 from address.forms import AddressForm
 from carts.utils import get_cart
 from carts.models import Cart
-from eCommerce.utils import is_valid_url
+from eCommerce.utils import is_valid_url, required_ajax
 
 
 @get_cart
@@ -25,17 +25,18 @@ def cart_home(request, cart):
 @required_ajax
 @get_cart
 def add_rmv_product(request, cart):
-    if not request.is_ajax:
-        return HttpResponseBadRequest
-
     product_id = request.POST.get('product_id')
     product, added = Cart.objects.add_or_remove_product(cart, product_id)
-
-    request.session['cart_items'] = cart.products.count()
+    cart_items = cart.products.count()
+    request.session['cart_items'] = cart_items
 
     msg = 'Added to your cart.' if added else 'Removed from your cart.'
     messages.success(request, msg)
-    return JsonResponse({'added': added, 'removed': not added})
+    return JsonResponse({
+        'added': added,
+        'removed': not added,
+        'cart_items': cart_items
+    })
 
 
 @required_ajax
@@ -50,6 +51,7 @@ def remove(request, cart):
 
 
 @login_required
+@get_cart
 def checkout(request, cart):
     if cart.products.count() == 0:
         messages.error(request, 'Your cart is empty')
@@ -97,7 +99,7 @@ def set_address_to_order(request, cart):
         return redirect('carts:checkout')
     return redirect(next_page)
 
-
+@login_required
 @get_cart
 def finalization(request, cart):
     order = Order.objects.get(cart=cart, status='shipped')
@@ -114,7 +116,7 @@ def finalization(request, cart):
     }
     return render(request, 'carts/finalization.html', context)
 
-
+@login_required
 @get_cart
 def done(request, cart):
     order = Order.objects.get(cart=cart, status='shipped')

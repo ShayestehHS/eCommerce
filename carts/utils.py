@@ -31,7 +31,6 @@ def get_cart_from_session(request):
             update_session(request, user_cart)
             return user_cart
 
-
     cart_id = get_cart_id_from_session(request=request)
     cart_obj, is_new = Cart.objects.get_or_new(request=request, id=cart_id)
 
@@ -46,6 +45,3 @@ def get_cart(view):
         return view(request, *args, **kwargs)
 
     return _wrapped_view
-
-
-
