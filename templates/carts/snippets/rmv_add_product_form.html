@@ -1,4 +1,7 @@
-<form method="POST" action="{% url 'carts:add_rmv' %}" id="form_rmv_add">
+<!-- NEED: in_Cart, product,url -->
+<!-- JS: 'js/form_rmv_add.js' -->
+
+<form method="POST" action="{{ url }}" class="form_rmv_add">
     {% csrf_token %}
     <input type="hidden" name="product_id" value="{{ product.id }}">
     {% if in_cart %}

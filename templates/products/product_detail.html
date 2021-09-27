@@ -18,11 +18,12 @@
             <li>is_featured: {{ product.is_featured }}</li>
             <li>Description: {{ product.description|linebreaks }}</li>
         </ul>
-        {% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=in_cart %}
+        {% url 'carts:add_rmv' as url_add_rmv %}
+        {% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=in_cart url=url_add_rmv %}
 
     </div>
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'js/product_detail.js' %}"></script>
+    <script src="{% static 'js/form_rmv_add.js' %}"></script>
 {% endblock js %}
