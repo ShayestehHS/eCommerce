@@ -28,7 +28,7 @@ $("#form-search").autocomplete({
             },
             complete: function () {
                 setTimeout(function(){ search_btn.html('Search'); }, 1000);
-            }
+            },
         });
     },
     select: function (event, ui) {
