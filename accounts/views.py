@@ -9,7 +9,7 @@ from django.views.generic import CreateView
 
 from accounts.forms import LoginForm, ContactEmailForm
 from accounts.utils import set_cart_to_user
-from eCommerce.utils import is_valid_url
+from eCommerce.utils import get_admin_emails, is_valid_url, EmailService
 
 User = get_user_model()
 
@@ -23,7 +23,13 @@ class ContactEmailCreate(CreateView):  # ToDo: Handle by AJAX
         form = form.save(commit=False)
         form.user = self.request.user if self.request.user.is_authenticated else None
         form.save()
-        self.message = 'Your message is received'
+        EmailService.send_email(
+            title=f'Contact email from {form.email}',
+            to=get_admin_emails(),
+            context={'msg_model': form},
+            template_name='email/contact_email.html'
+        )
+        # self.message = 'Your message is received'
         return JsonResponse({})
 
 
