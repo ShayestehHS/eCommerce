@@ -22,9 +22,12 @@ class CartManager(models.Manager):
         update_session(request, cart, is_new=True)
         return cart
 
-    def get_or_new(self, request, id, **kwargs):
+    def get_or_new(self, request, pro_id, **kwargs):
+        if pro_id <= 0:
+            return self.model.objects.new(request=request, **kwargs), True
+
         try:
-            obj = self.model.objects.get(id=id, **kwargs)
+            obj = self.model.objects.get(id=pro_id, **kwargs)
             is_new = False
         except self.model.DoesNotExist:
             obj = self.model.objects.new(request=request, **kwargs)
