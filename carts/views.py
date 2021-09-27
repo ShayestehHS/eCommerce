@@ -22,6 +22,7 @@ def cart_home(request, cart):
     return render(request, 'carts/cart_home.html', context)
 
 
+@required_ajax
 @get_cart
 def add_rmv_product(request, cart):
     if not request.is_ajax:
@@ -37,6 +38,7 @@ def add_rmv_product(request, cart):
     return JsonResponse({'added': added, 'removed': not added})
 
 
+@required_ajax
 @get_cart
 def remove(request, cart):
     product_id = request.POST['product_id']

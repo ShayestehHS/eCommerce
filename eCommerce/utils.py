@@ -1,3 +1,6 @@
+from functools import wraps
+
+from django.core.exceptions import BadRequest
 from django.utils.http import is_safe_url
 from django.contrib import messages
 
@@ -35,3 +38,14 @@ def update_session(request, cart, is_new=False):
     if is_new or session_id != cart_id:
         request.session['cart_id'] = cart_id
         request.session['cart_items'] = cart.products.count()
+
+
+def required_ajax(view):
+    @wraps(view)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.is_ajax():
+            raise BadRequest('Request is not AJAX.')
+
+        return view(request, *args, **kwargs)
+
+    return _wrapped_view
