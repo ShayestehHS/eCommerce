@@ -38,9 +38,11 @@
                         {% if request.path == products_url %}active{% endif %}"
                            href="{{ products_url }}">Products</a>
                     </li><!-- Products -->
-                    <li>
-                        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-                    </li><!-- Admin -->
+                    {% if request.user.is_superuser %}
+                        <li>
+                            <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                        </li>
+                    {% endif %}<!-- Admin -->
                     <li class="nav-item link-danger">
                         <a class=" nav-link position-relative
                         {% if request.path == carts_url %}active{% endif %}"
