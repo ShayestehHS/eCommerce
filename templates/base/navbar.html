@@ -5,7 +5,7 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-3">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">eCommerce</a>
+            <a class="navbar-brand" href="{{ home_url }}">eCommerce</a>
             <button class="navbar-toggler" type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent"
@@ -56,14 +56,14 @@
                     </li><!-- Cart -->{# ToDo: font-awesome #}
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#"
+                        <a class="nav-link dropdown-toggle"
                            id="navbarDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
+                            Extras
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="{% url 'accounts:contact' %}">Contact</a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="#">Another action</a></li>

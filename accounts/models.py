@@ -42,3 +42,14 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class ContactEmail(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    full_name = models.CharField(max_length=127)
+    email = models.EmailField()
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

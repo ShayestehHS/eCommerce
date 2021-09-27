@@ -1,16 +1,30 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_user, logout as logout_user
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import get_user_model
+from django.views.generic import CreateView
 
-from accounts.forms import LoginForm
+from accounts.forms import LoginForm, ContactEmailForm
 from accounts.utils import set_cart_to_user
 from eCommerce.utils import is_valid_url
 
-
 User = get_user_model()
+
+
+class ContactEmailCreate(CreateView):  # ToDo: Handle by AJAX
+    form_class = ContactEmailForm
+    template_name = 'accounts/contact.html'
+    context_object_name = 'form'
+
+    def form_valid(self, form):
+        form = form.save(commit=False)
+        form.user = self.request.user if self.request.user.is_authenticated else None
+        form.save()
+        self.message = 'Your message is received'
+        return JsonResponse({})
 
 
 @require_http_methods(['GET', 'POST'])
