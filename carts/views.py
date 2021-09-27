@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from orders.models import Order
@@ -38,6 +38,15 @@ def add_rmv_product(request, cart):
 
 
 @get_cart
+def remove(request, cart):
+    product_id = request.POST['product_id']
+    product = cart.products.get(id=product_id)
+    cart.products.remove(product)
+    request.session['cart_items'] = cart.products.count()
+    data = {'total': cart.total, 'subtotal': cart.subtotal}
+    return JsonResponse(data)
+
+
 @login_required
 def checkout(request, cart):
     if cart.products.count() == 0:
