@@ -1,53 +1,55 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block titile %}Cart{% endblock titile %}
 
 
 {% block content %}
     <h1>Cart</h1>
-    <div class="container">
+    <div class="container" id="cart_home">
         {% if products %}
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Product name</th>
-                    <th scope="col">Product price</th>
-                    <th scope="col">Remove</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for product in products %}
+                <table class="table cart_table">
+                    <thead>
                     <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.price }} $</td>
-                        <td>{% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=True %}</td>
+                        <th scope="col">#</th>
+                        <th scope="col">Product name</th>
+                        <th scope="col">Product price</th>
+                        <th scope="col">Remove</th>
                     </tr>
-                {% endfor %}
-                <tr>
-                    <th colspan="1"></th>
-                    <th scope="row">Subtotal</th>
-                    <td colspan="2">{{ cart.subtotal }}</td>
-                </tr>
-                <tr>
-                    <th colspan="1"></th>
-                    <th scope="row">Total</th>
-                    <td colspan="2">{{ total }}</td>
-                </tr>
-                </tbody>
-            </table>
-            <a href="{% url 'carts:checkout' %}"
-               class="btn btn-primary">Checkout</a>
+                    </thead>
+                    <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td class="row-number">{{ forloop.counter }}</td>
+                            <td>{{ product.name }}</td>
+                            <td class="price">${{ product.price }}</td>
+                            {% url 'carts:remove' as url_remove %}
+                            <td>
+                                {% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=True url=url_remove %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="1"></td>
+                        <td>Subtotal</td>
+                        <td colspan="2" class="subtotal">${{ cart.subtotal }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="1"></td>
+                        <td>Total</td>
+                        <td colspan="2" class="total">${{ total }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a href="{% url 'carts:checkout' %}"
+                   class="btn btn-primary">Checkout</a>
         {% else %}
             <h3>Your cart is empty</h3>
-            {% if not request.user.is_authenticated %}
-                <p>
-                    Maybe you want to login?😁 <a
-                        href="{% url 'accounts:login' %}"
-                        class="btn btn-sm btn-info">Login</a>
-                </p>
-            {% endif %}
         {% endif %}
     </div>
 {% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/cart_home.js' %}"></script>
+    <script src="{% static 'js/form_rmv_add.js' %}"></script>
+{% endblock %}
