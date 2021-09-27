@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock title %}
+
+{% block content %}
+    <div class="text-center row justify-content-center">
+        <form action="{% url 'accounts:register' %}" method="POST" data-ajax-url="{% url 'accounts:check_email' %}"
+              class="col-12 col-md-3" id="form-register">
+            {% csrf_token %}
+            <!-- {# {{form.as_p}} #} -->
+            <p>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                <small>{{ form.email.errors }}</small>
+            </p>
+            <p>
+                {{ form.full_name.label_tag }}
+                {{ form.full_name }}
+                <small>{{ form.full_name.errors }}</small>
+            </p>
+            <p>
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+            </p>
+            <p>
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                <small>{{ form.password2.errors }}</small>
+            </p>
+            <input type="submit" value="Submit" class="btn btn-info col-12 col-md-4">
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/register.js' %}"></script>
+    <!-- ToDo: Check email with AJAX -->
+{% endblock %}
