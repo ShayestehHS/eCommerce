@@ -13,6 +13,10 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'full_name')
+        widgets = {
+            'email': forms.EmailInput(attrs={'placeholder': "Should be unique"}),
+            'full_name': forms.EmailInput(attrs={'placeholder': "We will call you by this name"}),
+        }
 
     def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
@@ -43,7 +47,6 @@ class LoginForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        print(email)
         if email is None:
             raise forms.ValidationError('Email field is required')
 
@@ -63,7 +66,7 @@ class LoginForm(forms.Form):
 class ContactEmailForm(forms.ModelForm):
     class Meta:
         model = ContactEmail
-        exclude = ("user",)
+        fields = ("email", "full_name", 'message')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
