@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from analytics.models import ObjectViewed
+
+
+@admin.register(ObjectViewed)
+class ObjectViewedModelAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
