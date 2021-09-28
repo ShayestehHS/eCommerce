@@ -8,30 +8,30 @@
         {{ form.address_1.label_tag }}
         {{ form.address_1 }}
         {# ToDo: Error is not shownig #}
-        <small>{{ form.address_1.error }}</small>
+        <small>{{ form.address_1.errors }}</small>
     </div>
     <br>
     <div>
         {{ form.address_2.label_tag }}
         {{ form.address_2 }}
-        <small>{{ form.address_2.error }}</small>
+        <small>{{ form.address_2.errors }}</small>
     </div>
     <br>
     <div class="row">
         <div class="col-12 col-md-3">
             {{ form.country.label_tag }}
             {{ form.country }}
-            <small>{{ form.country.error }}</small>
+            <small>{{ form.country.errors }}</small>
         </div>
         <div class="col-12 col-md-3">
             {{ form.city.label_tag }}
             {{ form.city }}
-            <small>{{ form.city.error }}</small>
+            <small>{{ form.city.errors }}</small>
         </div>
         <div class="col-12 col-md-3">
             {{ form.state.label_tag }}
             {{ form.state }}
-            <small>{{ form.state.error }}</small>
+            <small>{{ form.state.errors }}</small>
         </div>
     </div>
     <br>
@@ -39,12 +39,12 @@
         <div class="col-12 col-md-3">
             {{ form.phone_number.label_tag }}
             {{ form.phone_number }}
-            <small>{{ form.phone_number.error }}</small>
+            <small>{{ form.phone_number.errors }}</small>
         </div>
         <div class="col-12 col-md-3">
             {{ form.postal_code.label_tag }}
             {{ form.postal_code }}
-            <small>{{ form.phone_number.error }}</small>
+            <small>{{ form.phone_number.errors }}</small>
         </div>
     </div>
     <br>
