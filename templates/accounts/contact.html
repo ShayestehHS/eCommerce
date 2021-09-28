@@ -6,10 +6,10 @@
 {% block content %}
     <form action="{% url 'accounts:contact' %}" method="POST"
           class="col-6 col-md-6 offset-3 text-center"
-    id="form-contact">
+          id="form-contact">
         {% csrf_token %}
-        {{ form.as_p }} <!-- ToDo: set default for fields -->
-        <input type="submit" value="Send" class="btn btn-dark">
+        {{ form.as_p }}
+        <input type="submit" value="Send" class="btn btn-dark" id="form-submit">
     </form>
 {% endblock content %}
 

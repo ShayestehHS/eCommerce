@@ -86,6 +86,13 @@ class ContactEmailCreate(CreateView, MessageMixin):
         self.message_level = messages.ERROR
         return super(ContactEmailCreate, self).form_invalid(form)
 
+    def get_initial(self):
+        user = self.request.user if self.request.user.is_authenticated else None
+        if user is None:
+            return super(ContactEmailCreate, self).get_initial()
+
+        return {'email': user.email, 'full_name': user.full_name}
+
 
 # @require_http_methods(['GET', 'POST'])
 # def login(request):
