@@ -31,6 +31,7 @@ urlpatterns = [
     path('cart/', include('carts.urls', namespace='carts')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('address/', include('address.urls', namespace='address')),
+    path('analytics/', include('analytics.urls', namespace='analytics')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
