@@ -129,6 +129,6 @@ def done(request, cart):
     if not is_deactivated:
         messages.error(request, 'Something bad is happening, Please contact to us')
         return redirect('carts:home')
-
+    # ToDo: Send email to customer
     messages.success(request, 'Please wait for the doorbell to ring😎')
     return redirect('home')

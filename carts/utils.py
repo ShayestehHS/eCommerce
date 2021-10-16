@@ -32,7 +32,7 @@ def get_cart_from_session(request):
             return user_cart
 
     cart_id = get_cart_id_from_session(request=request)
-    cart_obj, is_new = Cart.objects.get_or_new(request=request, id=cart_id)
+    cart_obj, is_new = Cart.objects.get_or_new(request=request, pro_id=cart_id)
 
     return cart_obj
 

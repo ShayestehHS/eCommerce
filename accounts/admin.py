@@ -10,6 +10,7 @@ admin.site.unregister(Group)
 class UserModelAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
 
+
 @admin.register(ContactEmail)
 class ContactEmailModelAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)

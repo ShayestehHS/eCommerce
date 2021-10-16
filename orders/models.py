@@ -16,23 +16,13 @@ ORDER_STATUS_CHOICES = (
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                                null=True,
-                                blank=True)  # ToDo: Delete this line
-    cart = models.OneToOneField(to=Cart, on_delete=models.CASCADE,
-                                related_name='order')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cart = models.OneToOneField(to=Cart, on_delete=models.CASCADE, related_name='order')
     order_id = models.CharField(max_length=10, editable=False, blank=True)
-    address_shipping = models.ForeignKey(Address, on_delete=models.CASCADE,
-                                            related_name='address_shipping',
-                                            null=True, blank=True)
-    address_billing = models.ForeignKey(Address, on_delete=models.CASCADE,
-                                           related_name='address_billing',
-                                           null=True, blank=True)
-    status = models.CharField(choices=ORDER_STATUS_CHOICES,
-                              max_length=8, default='created',
-                              null=True, blank=True)
-    total = models.DecimalField(max_digits=7, decimal_places=2, default=0,
-                                help_text='Maximum subtotal is 99999.99')
+    address_shipping = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='address_shipping', null=True, blank=True)
+    address_billing = models.ForeignKey(Address, on_delete=models.CASCADE,  related_name='address_billing', null=True, blank=True)
+    status = models.CharField(choices=ORDER_STATUS_CHOICES, max_length=8, default='created')
+    total = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Maximum subtotal is 99999.99')
 
     def check_done(self):
         order = self
