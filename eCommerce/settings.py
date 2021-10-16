@@ -131,16 +131,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static', 'static_dirs')]
 
 MEDIA_URL = '/media/'
-if not TEST:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-else:
+if TEST:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'test_media_root')
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'accounts/login/'
+LIMIT_SESSION = True
+LIMIT_SESSION_COUNT = 1
 
 if DEBUG:
     import mimetypes
@@ -152,9 +154,9 @@ if DEBUG:
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 # Email settings
+# EMAIL_DATA : January/20/2000 , Male
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = 'ecommerce1.website@gmail.com'
-# EMAIL_DATA : January/20/2000 , Male
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = 'myPassword_is_Easy'
 EMAIL_HOST = 'smtp.gmail.com'
