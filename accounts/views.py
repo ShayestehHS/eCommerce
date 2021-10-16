@@ -8,9 +8,10 @@ from django.contrib.auth import get_user_model
 from django.views.generic import CreateView, FormView
 
 from accounts.forms import RegisterForm, LoginForm, ContactEmailForm
-from accounts.signals import user_logged_in_signal
 from accounts.utils import set_cart_to_user
-from eCommerce.utils import get_admin_emails, is_valid_url, EmailService, MessageMixin, required_ajax
+from analytics.signals import user_logged_in_signal
+from eCommerce.utils import get_admin_emails, is_valid_url, EmailService, required_ajax
+from eCommerce.mixins import MessageMixin
 
 User = get_user_model()
 
