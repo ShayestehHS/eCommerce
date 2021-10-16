@@ -12,21 +12,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class MessageMixin:
-    message = ''
-    message_level = messages.SUCCESS  # Default tag
-    message_delete_other = False
-
-    def send_message(self, request):
-        if self.message_delete_other is True:
-            """ Delete stored messages """
-            storage = messages.get_messages(request)
-            storage.used = True
-
-        messages.add_message(request=request, level=self.message_level,
-                             message=self.message)
-
-
 class EmailService:
 
     @staticmethod

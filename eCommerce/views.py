@@ -1,20 +1,16 @@
 from django.http import JsonResponse
 from django.views.generic import TemplateView, ListView
 from django.views.decorators.http import require_GET
-from django.core.serializers import serialize
 
 from products.models import Product
-from eCommerce.utils import MessageMixin, required_ajax
+from eCommerce.utils import required_ajax
+from eCommerce.mixins import MessageMixin
 
 
-class HomeTemplateView(TemplateView, MessageMixin):
+class HomeTemplateView(MessageMixin, TemplateView):
     template_name = 'eCommerce/home.html'
     message = 'WELCOME'
     message_delete_other = True
-
-    def get_context_data(self, **kwargs):
-        super(HomeTemplateView, self).get_context_data()
-        self.send_message(self.request)
 
 
 class SearchProductListView(ListView):
@@ -36,9 +32,9 @@ def search_by_ajax(request):
     query = request.GET.get('q')
     if not query:
         return JsonResponse({})
-    "specific_value"
+
     product_name = Product.objects \
         .filter(name__icontains=query) \
-        .values_list('name', flat=True) # ToDo: clean this shit
+        .values_list('name', flat=True)  # ToDo: Do it by search manager
 
     return JsonResponse(list(product_name), safe=False)
