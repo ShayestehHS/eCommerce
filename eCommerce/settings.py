@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'carts.apps.CartsConfig',
     'orders.apps.OrdersConfig',
     'analytics.apps.AnalyticsConfig',
+    'marketing.apps.MarketingConfig',
 
     # Third party apps
     'taggit',
@@ -141,6 +142,7 @@ else:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = 'accounts/login/'
+
 LIMIT_SESSION = True
 LIMIT_SESSION_COUNT = 1
 
