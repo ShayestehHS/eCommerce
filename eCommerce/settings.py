@@ -146,6 +146,10 @@ LOGIN_URL = 'accounts/login/'
 LIMIT_SESSION = True
 LIMIT_SESSION_COUNT = 1
 
+MAILCHIMP_API_KEY = "f59c7016d6993bbd7dc6e122dc4dfb77-us5"
+MAILCHIMP_DATA_CENTER = "us5"
+MAILCHIMP_PUB_KEY = "3986ea028b"
+
 if DEBUG:
     import mimetypes
     from django.urls import path, include
