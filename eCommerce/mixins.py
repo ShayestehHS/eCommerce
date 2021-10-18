@@ -14,6 +14,7 @@ class MessageMixin(object):
 
         messages.add_message(request=request, level=self.message_level, message=self.message)
 
-    def get_context_data(self, *args, **kwargs):
+    def dispatch(self, *args, **kwargs):
+        response = super(MessageMixin, self).dispatch(*args, **kwargs)
         self.send_message(self.request)
-        return super(MessageMixin, self).get_context_data(*args, **kwargs)
+        return response
