@@ -12,3 +12,5 @@ def product_post_save(instance, created, *args, **kwargs):
     if created or is_name_updated:
         instance.slug = slugify(instance.name)
         instance.save(update_fields=['slug'])
+
+# ToDo: If product is_featured => Send message to subscribers by using pre_save signal
