@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Subscription{% endblock title %}
+
+{% block content %}
+    <div class="col-12 col-md-6 mx-auto">
+        <form method="POST" action="{% url 'marketing:subscription' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-dark">Save</button>
+        </form>
+    </div>
+{% endblock content %}
