@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&i)&qam9h@lhpfa1mc_a@jay_zu3xq9v$w&)&1tb)89%m2)%t7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-TEST = 'test' in sys.argv
+DEBUG = False  # Set as default
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = []  # Set as default
 
 # Application definition
 
@@ -132,10 +131,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static', 'static_dirs')]
 
 MEDIA_URL = '/media/'
-if TEST:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media', 'test_media_root')
-else:
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -149,15 +145,6 @@ LIMIT_SESSION_COUNT = 1
 MAILCHIMP_API_KEY = "f59c7016d6993bbd7dc6e122dc4dfb77-us5"
 MAILCHIMP_DATA_CENTER = "us5"
 MAILCHIMP_PUB_KEY = "3986ea028b"
-
-if DEBUG:
-    import mimetypes
-    from django.urls import path, include
-
-    mimetypes.add_type("application/javascript", ".js", True)
-    INTERNAL_IPS = ('127.0.0.1',)
-    INSTALLED_APPS += ['debug_toolbar']
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 # Email settings
 # EMAIL_DATA : January/20/2000 , Male
