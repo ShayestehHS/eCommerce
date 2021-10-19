@@ -2,6 +2,8 @@ import hashlib
 import re
 
 from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from mailchimp_marketing import Client
 from mailchimp_marketing.api_client import ApiClientError
@@ -69,3 +71,11 @@ class Mailchimp(object):
             raise Exception(f"An exception occurred: {error.text}")
 
         return response.get('status') == status
+
+
+# ToDo: What is this?, What is the object in classes?, What is the method_decorator?,
+# ToDo: What is the python module?
+class CsrfExemptMixin(object):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(CsrfExemptMixin, self).dispatch(request, *args, **kwargs)

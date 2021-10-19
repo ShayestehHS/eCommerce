@@ -1,10 +1,13 @@
+from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, View
 
 from eCommerce.mixins import MessageMixin
 from marketing.models import MarketingPreference
 from marketing.forms import SubscriptionForm
+from marketing.utils import Mailchimp
 
 
 class UpdateSubscription(MessageMixin, UpdateView):
@@ -32,3 +35,24 @@ class UpdateSubscription(MessageMixin, UpdateView):
             self.message = "You unsubscribed successfully"
 
         return super(UpdateSubscription, self).form_valid(form)
+
+
+# CsrfExemptMixin
+class MailchimpWebhookView(View): # ToDo: Set webhook to mailchimp
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        list_id = data.get('data[list_id]')
+        if list_id != getattr(settings, 'MAILCHIMP_PUB_KEY'):
+            return HttpResponse('Invalid key')
+        email = data.get("data[email]")
+        status = Mailchimp().get_subscription_status(email)
+        is_subbed = is_mailchimp_subbed = None
+        if status == "subscribed":
+            is_subbed = is_mailchimp_subbed = True
+        elif status == "unsubscribed":
+            is_subbed = is_mailchimp_subbed = False
+
+        if (is_subbed, is_mailchimp_subbed) != (None, None):
+            raise Exception(f"Status is {status}")
+
+        return HttpResponse("Thank you")
