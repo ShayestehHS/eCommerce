@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
-import sys
+
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -20,15 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 SECRET_KEY = 'django-insecure-&i)&qam9h@lhpfa1mc_a@jay_zu3xq9v$w&)&1tb)89%m2)%t7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False  # Set as default
 
-ALLOWED_HOSTS = []  # Set as default
+ALLOWED_HOSTS = ["*"]  # Set as default
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -82,7 +83,6 @@ WSGI_APPLICATION = 'eCommerce.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -92,7 +92,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -127,8 +126,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'static_root')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static', 'static_dirs')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -136,8 +134,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_URL = 'accounts/login/'
+
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
+LOGIN_URL = reverse_lazy('accounts:login')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
 
 LIMIT_SESSION = True
 LIMIT_SESSION_COUNT = 1
@@ -155,3 +155,6 @@ EMAIL_HOST_PASSWORD = 'myPassword_is_Easy'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+MANAGERS = (('Hossein Shayesteh', 'shayestehhs1@Gmail.com'),)
+ADMINS = MANAGERS  # ToDo: Read the documentation
