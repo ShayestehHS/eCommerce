@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }}{% endblock title %}
+
+
+{% block content %}
+    <h3>{{ product.name|title }}</h3>
+    <div class="container">
+        <p>{{ product.timestamp|timesince }} ago</p>
+        <div class="col-12 col-md-3">
+            <img src="{{ product.image.url }}" alt="{{ product.name }} logo"
+                 class="rounded img-fluid">
+        </div>
+        <h5>Information:</h5>
+        <ul>
+            <li>Price: ${{ product.price }}</li>
+            <li>is_featured: {{ product.is_featured }}</li>
+            <li>Description: {{ product.description|linebreaks }}</li>
+        </ul>
+        {% url 'carts:add_rmv' as url_add_rmv %}
+        {% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=in_cart url=url_add_rmv %}
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/form_rmv_add.js' %}"></script>
+{% endblock js %}

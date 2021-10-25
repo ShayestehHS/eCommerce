@@ -1,0 +1,33 @@
+{% load is_in %}
+{% load is_in %}
+
+<div class="card" style="width: 18rem;">
+    {% if product.image %}
+        <a href="{{ product.get_absolute_url }}">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="image">
+        </a>
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">{{ product.title }}</h5>
+        <p class="card-text">{{ product.description|truncatechars:20 }}</p>
+        <div class="row">
+            <div class="col-3 col-md-3">
+                <a href="{{ product.get_absolute_url }}" class="btn btn-primary">View</a>
+            </div>
+            <div class="col-6 col-md-6">
+                {% if all_id %}
+                    {% url 'carts:add_rmv' as url_add_rmv %}
+                    {% with product.id|is_in:all_id as in_cart %}
+                        {% include 'carts/snippets/rmv_add_product_form.html' with product=product in_cart=in_cart url=url_add_rmv %}
+                    {% endwith %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="container bg-light">
+            {% for tag in product.tagged_items.tag.all %}
+                <span>{{ tag.name }}</span>
+                {% if not forloop.last %},{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
