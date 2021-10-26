@@ -12,6 +12,9 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    networks:
+      - ecommerce_network
+      - nginx_network
 
   nginx:
     container_name: nginx
@@ -22,6 +25,8 @@ services:
       - "80:80"
     depends_on:
       - django_gunicorn
+    networks:
+      - nginx_network
 
   ecommerce_postgresql:
     container_name: postgresql
@@ -32,7 +37,14 @@ services:
     env_file: .env
     ports:
       - "5432:5432"
+    networks:
+      - ecommerce_network
 
 volumes:
   postgresql_data:
+    external: true
+networks:
+  ecommerce_network:
+    external: true
+  nginx_network:
     external: true
