@@ -3,6 +3,7 @@ version: '3.7'
 services:
   django_gunicorn:
     container_name: django_gunicorn
+    restart: always
     build:
       context: .
     volumes:
@@ -25,12 +26,11 @@ services:
     depends_on:
       - django_gunicorn
     networks:
-      - ecommerce_network
       - nginx_network
 
   ecommerce_postgresql:
-    image: postgres:14
     container_name: postgresql
+    image: postgres:14
     restart: always
     volumes:
       - postgresql_data:/val/lib/postgresql/data
