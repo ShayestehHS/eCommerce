@@ -1,5 +1,3 @@
-import os
-
 from eCommerce.settings.base import *
 
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
