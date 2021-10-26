@@ -25,6 +25,7 @@ services:
     depends_on:
       - django_gunicorn
     networks:
+      - ecommerce_network
       - nginx_network
 
   ecommerce_postgresql:
