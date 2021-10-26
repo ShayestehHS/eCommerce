@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = os.environ.get("SECRET_KEY")
-SECRET_KEY = 'django-insecure-&i)&qam9h@lhpfa1mc_a@jay_zu3xq9v$w&)&1tb)89%m2)%t7'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False  # Set as default
@@ -142,9 +142,9 @@ LOGIN_REDIRECT_URL = reverse_lazy('home')
 LIMIT_SESSION = True
 LIMIT_SESSION_COUNT = 1
 
-MAILCHIMP_API_KEY = "f59c7016d6993bbd7dc6e122dc4dfb77-us5"
-MAILCHIMP_DATA_CENTER = "us5"
-MAILCHIMP_PUB_KEY = "3986ea028b"
+MAILCHIMP_API_KEY = os.getenv('MAILCHIMP_API_KEY')
+MAILCHIMP_DATA_CENTER = os.getenv('MAILCHIMP_DATA_CENTER')
+MAILCHIMP_PUB_KEY = os.getenv('MAILCHIMP_PUB_KEY')
 
 # Email settings
 # EMAIL_DATA : January/20/2000 , Male

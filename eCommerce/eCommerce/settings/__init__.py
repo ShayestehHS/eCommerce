@@ -1,4 +1,4 @@
-setting_env = 'LOCAL'  # Choices are: LOCAL, PRODUCTION, TEST
+setting_env = 'PRODUCTION'  # Choices are: LOCAL, PRODUCTION, TEST
 
 if setting_env == 'LOCAL':
     from eCommerce.settings.local import *
