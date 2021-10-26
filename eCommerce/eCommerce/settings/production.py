@@ -6,7 +6,7 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="*").split(" ")
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 STATIC_ROOT = '/static/'
-DEBUG = bool(os.getenv("DEBUG", default=0))
+DEBUG = bool(int(os.getenv("DEBUG", default=0)))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
