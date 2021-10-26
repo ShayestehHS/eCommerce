@@ -13,6 +13,7 @@ services:
       - .env
     networks:
       - ecommerce_network
+      - nginx_network
 
   nginx:
     container_name: nginx
@@ -23,6 +24,8 @@ services:
       - "80:80"
     depends_on:
       - django_gunicorn
+    networks:
+      - nginx_networkd
 
   ecommerce_postgresql:
     image: postgres:14
@@ -41,4 +44,6 @@ volumes:
     external: true
 networks:
   ecommerce_network:
+    external: true
+  nginx_network:
     external: true
