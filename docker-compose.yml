@@ -14,11 +14,11 @@ services:
       - .env
     networks:
       - nginx_network
-      - postgresql_network
-    links:
-      - ecommerce_postgresql:ecommerce_postgresql
-    depends_on:
-      - ecommerce_postgresql
+#      - postgresql_network
+#    links:
+#      - ecommerce_postgresql:ecommerce_postgresql
+#    depends_on:
+#      - ecommerce_postgresql
 
   nginx:
     container_name: nginx
@@ -33,15 +33,15 @@ services:
     networks:
       - nginx_network
 
-  ecommerce_postgresql:
-    container_name: ecommerce_postgresql
-    image: postgres:14
-    restart: always
-    volumes:
-      - postgresql_data:/val/lib/postgresql/data
-    env_file: .env
-    networks:
-      - postgresql_network
+#  ecommerce_postgresql:
+#    container_name: ecommerce_postgresql
+#    image: postgres:14
+#    restart: always
+#    volumes:
+#      - postgresql_data:/val/lib/postgresql/data
+#    env_file: .env
+#    networks:
+#      - postgresql_network
 
 volumes:
   postgresql_data:
@@ -49,5 +49,5 @@ volumes:
 networks:
   nginx_network:
     external: true
-  postgresql_network:
-    driver: bridge
+#  postgresql_network:
+#    driver: bridge
