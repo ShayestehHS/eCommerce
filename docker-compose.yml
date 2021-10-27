@@ -14,12 +14,15 @@ services:
       - .env
     networks:
       - nginx_network
+    links:
+      - ecommerce_postgresql:ecommerce_postgresql
     depends_on:
       - ecommerce_postgresql
 
   nginx:
     container_name: nginx
     build: ./config/nginx
+    restart: always
     volumes:
       - ./eCommerce/static_files:/static
     ports:
