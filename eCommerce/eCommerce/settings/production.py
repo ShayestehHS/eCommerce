@@ -7,16 +7,16 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="*").split(" ")
 SECRET_KEY = os.getenv('SECRET_KEY')
 STATIC_ROOT = '/static/'
 DEBUG = bool(int(os.getenv("DEBUG", default=0)))
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'ecommerce_postgresql',
-        'PORT': '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv('POSTGRES_DB'),
+#         'USER': os.getenv('POSTGRES_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+#         'HOST': 'ecommerce_postgresql',
+#         'PORT': '5432',
+#     }
+# }
 
 # SSL/TLS Settings
 # CORS_REPLACE_HTTPS_REFERER = True
