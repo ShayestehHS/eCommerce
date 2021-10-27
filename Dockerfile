@@ -17,7 +17,7 @@ RUN pip install -r /requirements.txt
 RUN apk del .tmp
 
 RUN mkdir /app
-COPY ./app /app
+COPY ./eCommerce /app
 WORKDIR /app
 COPY ./scripts /scripts
 
