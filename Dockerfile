@@ -4,8 +4,8 @@ LABEL MAINTAINER="ShayestehHS"
 ENV PATH="/scripts:${PATH}"
 
 # install psycopg2 dependencies
-RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+#RUN apk update \
+#    && apk add postgresql-dev gcc python3-dev musl-dev
 
 # install Pillow dependencies
 RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
