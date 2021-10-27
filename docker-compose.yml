@@ -13,25 +13,25 @@ services:
     env_file:
       - .env
     networks:
-#      - nginx_network
+      - nginx_network
       - postgresql_network
     links:
       - ecommerce_postgresql:ecommerce_postgresql
     depends_on:
       - ecommerce_postgresql
 
-#  nginx:
-#    container_name: nginx
-#    build: ./config/nginx
-#    restart: always
-#    volumes:
-#      - ./eCommerce/static_files:/static
-#    ports:
-#      - "80:80"
-#    depends_on:
-#      - django_gunicorn
-#    networks:
-#      - nginx_network
+  nginx:
+    container_name: nginx
+    build: ./config/nginx
+    restart: always
+    volumes:
+      - ./eCommerce/static_files:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - django_gunicorn
+    networks:
+      - nginx_network
 
   ecommerce_postgresql:
     container_name: ecommerce_postgresql
@@ -47,7 +47,7 @@ volumes:
   postgresql_data:
     external: true
 networks:
-#  nginx_network:
-#    external: true
+  nginx_network:
+    external: true
   postgresql_network:
     driver: bridge
