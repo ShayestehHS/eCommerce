@@ -1,9 +1,7 @@
 FROM python:3.9.6-alpine
-LABEL MAINTAINER="ShayestehHs"
+LABEL MAINTAINER="ShayestehHS"
 
 ENV PATH="/scripts:${PATH}"
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
 
 COPY ./requirements.txt /requirements.txt
 RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
