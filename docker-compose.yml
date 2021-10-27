@@ -13,7 +13,6 @@ services:
     env_file:
       - .env
     networks:
-      - ecommerce_network
       - nginx_network
     depends_on:
       - ecommerce_postgresql
@@ -37,16 +36,10 @@ services:
     volumes:
       - postgresql_data:/val/lib/postgresql/data
     env_file: .env
-    ports:
-      - "ecommerce_postgresql:5432"
-    networks:
-      - ecommerce_network
 
 volumes:
   postgresql_data:
     external: true
 networks:
-  ecommerce_network:
-    external: true
   nginx_network:
     external: true
