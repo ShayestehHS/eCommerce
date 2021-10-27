@@ -1,8 +1,8 @@
 asgiref==3.4.1
 certifi==2021.10.8
 charset-normalizer==2.0.7
-Django==3.2.8
-django-debug-toolbar==3.2.2
+Django>=3.2.8,<3.3
+uWSGI>=2.0.18,<2.1
 django-taggit==1.5.1
 idna==3.3
 mailchimp-marketing==3.0.70
