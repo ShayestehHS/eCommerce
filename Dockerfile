@@ -26,8 +26,9 @@ RUN chmod +x /scripts/*
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 RUN adduser -D user
-#RUN chown -R user:user /vol
-#RUN chmod -R 755 /vol/web
+RUN chown -R user:user /vol
+RUN chmod -R 755 /vol/web
+RUN chmod -R 755 /static
 USER user
 
 CMD ["entrypoint.sh"]
