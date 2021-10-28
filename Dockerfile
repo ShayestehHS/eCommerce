@@ -1,8 +1,9 @@
 FROM python:3.9.6-alpine
 LABEL MAINTAINER="ShayestehHS"
 
-# install psycopg2 dependencies
 RUN apk update
+
+# install psycopg2 dependencies
 RUN apk add postgresql-dev python3-dev musl-dev
 
 # install Pillow dependencies
@@ -25,8 +26,8 @@ RUN chmod +x /scripts/*
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 RUN adduser -D user
-RUN chown -R user:user /vol
-RUN chmod -R 755 /vol/web
+#RUN chown -R user:user /vol
+#RUN chmod -R 755 /vol/web
 USER user
 
 CMD ["entrypoint.sh"]
