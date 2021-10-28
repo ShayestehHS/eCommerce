@@ -19,7 +19,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from eCommerce import views
-from debug_toolbar import urls as debug_toolbar_url
 
 urlpatterns = [
     path('', views.HomeTemplateView.as_view(), name='home'),
@@ -37,6 +36,7 @@ urlpatterns = [
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
+    from debug_toolbar import urls as debug_toolbar_url
     urlpatterns += [path('__debug__/', include(debug_toolbar_url))]
 
 admin.site.site_header = "eCommerce"
