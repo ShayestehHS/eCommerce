@@ -1,11 +1,24 @@
-FROM nginx:1.21.3
+FROM nginxinc/nginx-unprivileged:1-alpine
+LABEL MAINTAINER="ShayestehHS"
 
-COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./uwsgi_params /etc/nginx/uwsgi_params
+COPY ./run.sh /run.sh
 
-#USER root
+ENV LISTEN_PORT=8000
+ENV APP_HOST=app
+ENV APP_PORT=900
 
-RUN mkdir -p /vol/static
-#RUN chmod 755 /vol/static
+USER root
 
-#USER nginx
+RUN mkdir -p /vol/static && \
+    chmod 755 /vol/static && \
+    touch /etc/nginx/conf.d/defult.conf && \
+    chown nginx:nginx /etc/nginx/conf.d/default.conf && \
+    chmod +x /run.sh
+
+VOLUME /vol/static
+
+USER nginx
+
+CMD ["/run.sh"]

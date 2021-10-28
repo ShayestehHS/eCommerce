@@ -1,33 +1,58 @@
-FROM python:3.9.6-alpine
+FROM python:3.9-alpine3.13
 LABEL MAINTAINER="ShayestehHS"
 
-RUN apk update
+ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
-RUN apk add postgresql-dev python3-dev musl-dev
-
-# install Pillow dependencies
-RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
-ENV LIBRARY_PATH=/lib:/usr/lib
-
-ENV PATH="/scripts:${PATH}"
 COPY ./requirements.txt /requirements.txt
-RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
-RUN pip install -r /requirements.txt
-RUN apk del .tmp
-
-RUN mkdir /app
 COPY ./eCommerce /app
-WORKDIR /app
 COPY ./scripts /scripts
 
-RUN chmod +x /scripts/*
+WORKDIR /app
+EXPOSE 8000
 
-RUN mkdir -p /vol/web/media
-RUN mkdir -p /vol/web/static
-RUN adduser -D user
-#RUN chown -R user:user /vol
-#RUN chmod -R 755 /vol/web
-USER user
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-deps \
+        build-base postgresql-dev musl-dev linux-headers && \
+    /py/bin/pip install -r /requirements.txt && \
+    apk del .tmp-deps && \
+    adduser --disabled-password --no-create-home app && \
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+    chown -R app:app /vol && \
+    chmod -R 755 /vol && \
+    chmod -R +x /scripts
 
-CMD ["entrypoint.sh"]
+ENV PATH="/scripts:/py/bin:$PATH"
+
+USER app
+
+CMD ["run.sh"]
+
+#RUN apk update
+#
+## install psycopg2 dependencies
+#RUN apk add postgresql-dev python3-dev musl-dev
+#
+## install Pillow dependencies
+#RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
+#ENV LIBRARY_PATH=/lib:/usr/lib
+#
+#RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers
+#RUN pip install -r /requirements.txt
+#RUN apk del .tmp
+#
+#
+#COPY ./scripts /scripts
+#
+#RUN chmod +x /scripts/*
+#
+#RUN mkdir -p /vol/web/media
+#RUN mkdir -p /vol/web/static
+#RUN adduser -D user
+##RUN chown -R user:user /vol
+##RUN chmod -R 755 /vol/web
+#USER user
+#
+#CMD ["entrypoint.sh"]
