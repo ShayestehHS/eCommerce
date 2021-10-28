@@ -2,8 +2,8 @@ FROM python:3.9.6-alpine
 LABEL MAINTAINER="ShayestehHS"
 
 # install psycopg2 dependencies
-RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk update
+RUN apk add postgresql-dev python3-dev musl-dev
 
 # install Pillow dependencies
 RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
