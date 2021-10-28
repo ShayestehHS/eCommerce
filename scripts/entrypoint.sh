@@ -4,4 +4,4 @@ set -e
 
 python manage.py collectstatic --noinput
 
-uwsgi --ini uwsgi.ini
+uwsgi --socket :8000 --master --enable-threads --module eCommerce.wsgi
