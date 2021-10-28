@@ -7,7 +7,7 @@ services:
     build:
       context: .
     volumes:
-      - static_data:/vol/web
+      - static_data:/vol/web/static
     env_file:
       - .env
 
@@ -17,7 +17,7 @@ services:
     build:
       context: ./proxy
     volumes:
-      - static_data:/vol/static
+      - static_data:/vol/web/static
     ports:
       - "8080:8080"
     depends_on:
