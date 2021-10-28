@@ -3,7 +3,12 @@ from eCommerce.settings.base import *
 DEBUG = bool(int(os.getenv("DEBUG", default=0)))
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="*").split(" ")
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.getenv("DJANGO_ALLOWED_HOSTS", default="*").split(" ")
+    )
+)
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 STATIC_URL = '/static/static/'
@@ -11,16 +16,16 @@ MEDIA_URL = '/static/media/'
 
 STATIC_ROOT = '/vol/web/static'
 MEDIA_ROOT = '/vol/web/media'
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.getenv('POSTGRES_DB'),
-#         'USER': os.getenv('POSTGRES_USER'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': 'ecommerce_postgresql',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'ecommerce_postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'PORT': '5432',
+    }
+}
 
 # SSL/TLS Settings
 # CORS_REPLACE_HTTPS_REFERER = True
