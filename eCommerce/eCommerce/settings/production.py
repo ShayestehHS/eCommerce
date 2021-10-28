@@ -1,12 +1,16 @@
 from eCommerce.settings.base import *
 
+DEBUG = bool(int(os.getenv("DEBUG", default=0)))
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="*").split(" ")
-
 SECRET_KEY = os.getenv('SECRET_KEY')
-STATIC_ROOT = '/static/'
-DEBUG = bool(int(os.getenv("DEBUG", default=0)))
+
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
+
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',

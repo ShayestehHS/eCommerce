@@ -1,21 +1,26 @@
 setting_env = 'PRODUCTION'  # Choices are: LOCAL, PRODUCTION, TEST
+# Colors
+ENDC = '\033[0m'
+WARNING = '\033[93m'
+OKGREEN = '\033[92m'
+OKCYAN = '\033[96m'
 
 if setting_env == 'LOCAL':
     from eCommerce.settings.local import *
-    print("-- Local setting imported --")
+    print(OKCYAN + "-- Local setting imported --" + ENDC)
 
 elif setting_env == 'PRODUCTION':
     from eCommerce.settings.production import *
-    print("-- Production setting imported --")
+    print(OKCYAN + "-- Production setting imported --" + ENDC)
 
 elif setting_env == "TEST":
     from eCommerce.settings.test import *
-    print("-- Test setting imported --")
+    print(OKCYAN + "-- Test setting imported --" + ENDC)
 
 else:
-    raise Exception('-- Invalid setting_env --')
+    raise Exception(OKCYAN + '-- Invalid setting_env --' + ENDC)
 
 if DEBUG is True:
-    print("-- Debug mode is: ON --")
+    print(WARNING + "-- Debug mode is: ON --" + ENDC)
 else:
-    print("-- Debug mode is: OFF --")
+    print(OKGREEN + "-- Debug mode is: OFF --" + ENDC)
