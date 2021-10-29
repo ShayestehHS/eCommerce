@@ -4,6 +4,7 @@ charset-normalizer==2.0.7
 Django>=3.2.3,<3.3
 uWSGI>=2.0.19.1,<2.1
 psycopg2>=2.8.6,<2.9
+wheel==0.37.0
 django-taggit==1.5.1
 idna==3.3
 mailchimp-marketing==3.0.70
