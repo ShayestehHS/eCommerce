@@ -19,7 +19,7 @@ MEDIA_ROOT = '/vol/web/media'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': 'ecommerce_postgresql',
+        'HOST': 'db',
         'NAME': os.getenv('POSTGRES_DB'),
         'USER': os.getenv('POSTGRES_USER'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
