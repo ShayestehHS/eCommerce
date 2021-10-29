@@ -11,9 +11,11 @@ WORKDIR /app
 EXPOSE 8000
 
 RUN python -m venv /py && \
-    /py/bin/pip install --upgrade pip && \
-    apk add --update postgresql-client && \
-    apk add --update --virtual .tmp-deps \
+    /py/bin/pip install --upgrade pip
+
+RUN apk add --update postgresql-client
+
+RUN apk add --update --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers
 
 ## install psycopg2 dependencies
