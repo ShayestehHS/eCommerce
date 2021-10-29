@@ -17,6 +17,8 @@ RUN mkdir -p /vol/static && \
     chown nginx:nginx /etc/nginx/conf.d/default.conf && \
     chmod +x /run.sh
 
+RUN apk add tree
+
 VOLUME /vol/static
 
 USER nginx
