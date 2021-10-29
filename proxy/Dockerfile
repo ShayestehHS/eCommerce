@@ -1,7 +1,6 @@
 FROM nginxinc/nginx-unprivileged:1-alpine
 LABEL MAINTAINER="ShayestehHS"
 
-COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./uwsgi_params /etc/nginx/uwsgi_params
 COPY ./run.sh /run.sh
 
@@ -11,6 +10,7 @@ ENV APP_PORT=9000
 
 USER root
 
+COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 RUN mkdir -p /vol/static && \
     chmod 755 /vol/static && \
     touch /etc/nginx/conf.d/defult.conf && \
