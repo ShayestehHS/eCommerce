@@ -4,7 +4,8 @@ services:
   app:
     build:
       context: .
-    restart: always
+    container_name: app
+    restart: on-failure:10
     volumes:
       - static-data:/vol/web
     depends_on:
@@ -13,6 +14,7 @@ services:
       - .env
 
   db:
+    container_name: db
     image: postgres:13-alpine
     restart: always
     volumes:
@@ -23,6 +25,7 @@ services:
   proxy:
     build:
       context: ./proxy
+    container_name: proxy
     restart: always
     depends_on:
       - app
