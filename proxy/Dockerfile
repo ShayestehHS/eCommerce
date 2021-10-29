@@ -3,7 +3,6 @@ LABEL MAINTAINER="ShayestehHS"
 
 COPY ./default.conf.tpl /etc/nginx/default.conf.tpl
 COPY ./uwsgi_params /etc/nginx/uwsgi_params
-COPY ./run.sh /run.sh
 
 ENV LISTEN_PORT=8000
 ENV APP_HOST=app
@@ -18,6 +17,7 @@ RUN mkdir -p /vol/static && \
     chmod +x /run.sh
 
 RUN apk add tree
+COPY ./run.sh /run.sh
 
 VOLUME /vol/static
 
