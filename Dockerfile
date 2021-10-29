@@ -32,17 +32,10 @@ RUN apk del .tmp-deps && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
-    chown -R /app/accounts/migrations/ && \
-    chown -R /app/address/migrations/ && \
-    chown -R /app/analytics/migrations/ && \
-    chown -R /app/carts/migrations/ && \
-    chown -R /app/marketing/migrations/ && \
-    chown -R /app/orders/migrations/ && \
-    chown -R /app/products/migrations/ && \
     chmod -R +x /scripts
 
-
 ENV PATH="/scripts:/py/bin:$PATH"
+RUN python manage.py makemigrations
 
 USER app
 
