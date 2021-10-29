@@ -32,10 +32,10 @@ RUN apk del .tmp-deps && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
+    chmod -R 755 /app/accounts/migrations/ && \
     chmod -R +x /scripts
 
 ENV PATH="/scripts:/py/bin:$PATH"
-RUN python manage.py makemigrations
 
 USER app
 
