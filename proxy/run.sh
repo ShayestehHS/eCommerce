@@ -10,7 +10,7 @@ cd var
 ls
 cd ..
 
-cd val/local
+cd var/local
 ls
 cd ..
 
