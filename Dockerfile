@@ -45,6 +45,4 @@ ENV PATH="/scripts:/py/bin:$PATH"
 
 USER app
 
-RUN apk add tree
-
 CMD ["run.sh"]
