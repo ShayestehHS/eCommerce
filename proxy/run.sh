@@ -4,8 +4,8 @@ set -e
 
 envsubst < /etc/nginx/default.conf.tpl > /etc/nginx/conf.d/default.conf
 
-ls
+#ls
 
-find / -type d -name "static"
+#find / -type d -name "static"
 #tree -d .
 nginx -g 'daemon off;'
