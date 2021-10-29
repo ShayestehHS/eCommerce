@@ -10,6 +10,9 @@ COPY ./scripts /scripts
 WORKDIR /app
 EXPOSE 8000
 
+RUN echo "nameserver 185.51.200.2" > /etc/resolv.conf && \
+    echo "nameserver 178.22.122.100" > /etc/resolv.conf
+
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip
 
