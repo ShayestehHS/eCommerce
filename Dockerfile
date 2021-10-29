@@ -32,7 +32,7 @@ RUN apk del .tmp-deps && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
-    ls && \
+    chmod -R a+rwx ./accounts/ && \
     chmod -R +x /scripts
 
 ENV PATH="/scripts:/py/bin:$PATH"
