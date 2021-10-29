@@ -36,7 +36,6 @@ RUN apk del .tmp-deps && \
 
 
 ENV PATH="/scripts:/py/bin:$PATH"
-RUN python manage.py makemigrations
 
 USER app
 
