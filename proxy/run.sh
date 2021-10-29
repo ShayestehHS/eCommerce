@@ -6,6 +6,6 @@ envsubst < /etc/nginx/default.conf.tpl > /etc/nginx/conf.d/default.conf
 
 ls
 
-tree -d var
+find / -type d -name "static"
 #tree -d .
 nginx -g 'daemon off;'
