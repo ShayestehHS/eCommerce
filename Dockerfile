@@ -32,13 +32,13 @@ RUN apk del .tmp-deps && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
-    chmod -R 755 /app/accounts/migrations && \
-    chmod -R 755 /app/address/migrations && \
-    chmod -R 755 /app/analytics/migrations && \
-    chmod -R 755 /app/carts/migrations && \
-    chmod -R 755 /app/marketing/migrations && \
-    chmod -R 755 /app/orders/migrations && \
-    chmod -R 755 /app/products/migrations && \
+    chmod -R 755 /app/accounts/migrations/ && \
+    chmod -R 755 /app/address/migrations/ && \
+    chmod -R 755 /app/analytics/migrations/ && \
+    chmod -R 755 /app/carts/migrations/ && \
+    chmod -R 755 /app/marketing/migrations/ && \
+    chmod -R 755 /app/orders/migrations/ && \
+    chmod -R 755 /app/products/migrations/ && \
     chmod -R +x /scripts
 
 
