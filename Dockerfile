@@ -14,7 +14,7 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update postgresql-client && \
     apk add --update --virtual .tmp-deps \
-        build-base postgresql-dev musl-dev linux-headers python3-dev py-pip jpeg-dev zlib-dev
+        build-base postgresql-dev musl-dev linux-header
 
 
 #
