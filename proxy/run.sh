@@ -14,6 +14,6 @@ cd var/local
 ls
 cd ..
 
-find . -type d -name "static"
+sudo find . -type d -name "static"
 #tree -d .
 nginx -g 'daemon off;'
