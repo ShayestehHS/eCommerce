@@ -34,6 +34,11 @@ RUN apk del .tmp-deps && \
     chmod -R 755 /vol && \
     chmod -R +x /scripts
 
+RUN mkdir /usr/local/var/postgres && \
+    chmod 775 /usr/local/var/postgres && \
+    chown $(whoami) /usr/local/var/postgres && \
+    initdb /usr/local/var/postgres
+
 ENV PATH="/scripts:/py/bin:$PATH"
 
 USER app
