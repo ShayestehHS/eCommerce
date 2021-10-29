@@ -9,6 +9,8 @@ services:
       - static-data:/vol/web
     depends_on:
       - db
+    env_file:
+      - .env
 
   db:
     image: postgres:13-alpine
