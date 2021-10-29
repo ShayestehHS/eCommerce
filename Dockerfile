@@ -36,7 +36,6 @@ RUN apk del .tmp-deps && \
     chmod -R a+rwx ./address/migrations/ && \
     chmod -R a+rwx ./analytics/migrations/ && \
     chmod -R a+rwx ./carts/migrations/ && \
-    chmod -R a+rwx ./eCommerce/migrations/ && \
     chmod -R a+rwx ./marketing/migrations/ && \
     chmod -R a+rwx ./orders/migrations/ && \
     chmod -R a+rwx ./products/migrations/ && \
