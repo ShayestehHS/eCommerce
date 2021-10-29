@@ -20,8 +20,8 @@ RUN apk add --update --virtual .tmp-deps \
         build-base postgresql-dev musl-dev linux-headers && \
     /py/bin/pip install -r /requirements.txt
 
-COPY ./eCommerce /app
 COPY ./scripts /scripts
+COPY ./eCommerce /app
 
 WORKDIR /app
 EXPOSE 8000
