@@ -8,7 +8,7 @@ from eCommerce.utils import required_ajax
 from eCommerce.mixins import MessageMixin
 
 
-class HomeTemplateView(LoginRequiredMixin, MessageMixin, TemplateView):
+class HomeTemplateView(MessageMixin, TemplateView):
     template_name = 'eCommerce/home.html'
     message = 'WELCOME'
     message_delete_other = True
