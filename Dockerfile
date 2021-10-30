@@ -9,7 +9,7 @@ RUN python -m venv /py && \
 
 ## install psycopg2 dependencies
 RUN apk add postgresql-dev python3-dev musl-dev
-#
+
 ## install Pillow dependencies
 RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
 ENV LIBRARY_PATH=/lib:/usr/lib
@@ -32,13 +32,6 @@ RUN apk del .tmp-deps && \
     mkdir -p /vol/web/media && \
     chown -R app:app /vol && \
     chmod -R 755 /vol && \
-#    chmod -R a+rwx ./accounts/migrations/ && \
-#    chmod -R a+rwx ./address/migrations/ && \
-#    chmod -R a+rwx ./analytics/migrations/ && \
-#    chmod -R a+rwx ./carts/migrations/ && \
-#    chmod -R a+rwx ./marketing/migrations/ && \
-#    chmod -R a+rwx ./orders/migrations/ && \
-#    chmod -R a+rwx ./products/migrations/ && \
     chmod -R a+rwx **/migrations/ && \
     chmod -R +x /scripts
 
