@@ -2,25 +2,29 @@ FROM python:3.9-alpine3.13
 LABEL MAINTAINER="ShayestehHS"
 
 ENV PYTHONUNBUFFERED 1
-ENV LIBRARY_PATH=/lib:/usr/lib
-EXPOSE 8000
 
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     apk add --update postgresql-client
 
+## install psycopg2 dependencies
+RUN apk add postgresql-dev python3-dev musl-dev
+#
+## install Pillow dependencies
+RUN apk add build-base python3-dev py-pip jpeg-dev zlib-dev
+ENV LIBRARY_PATH=/lib:/usr/lib
+
 COPY ./requirements.txt /requirements.txt
 
 RUN apk add --update --virtual .tmp-deps \
-        build-base postgresql-dev musl-dev \
-        py-pip jpeg-dev zlib-dev \
-        linux-headers python3-dev && \
+        build-base postgresql-dev musl-dev linux-headers && \
     /py/bin/pip install -r /requirements.txt
 
 COPY ./scripts /scripts
 COPY ./eCommerce /app
 
 WORKDIR /app
+EXPOSE 8000
 
 RUN apk del .tmp-deps && \
     adduser --disabled-password --no-create-home app && \
