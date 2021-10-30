@@ -1,8 +1,14 @@
 """
 Django command to wait for the database to be available.
 """
-import time
+# Colors
+ENDC = '\033[0m'
+WARNING = '\033[93m'
+OKGREEN = '\033[92m'
+OKCYAN = '\033[96m'
+FAIL = '\033[91m'
 
+import time
 from psycopg2 import OperationalError as Psycopg2OpError
 
 from django.db.utils import OperationalError
@@ -22,8 +28,8 @@ class Command(BaseCommand):
                 self.check(databases=['default'])
                 db_up = True
             except (Psycopg2OpError, OperationalError):
-                self.stdout.write('Database unavailable, waiting 1 second...')
+                self.stdout.write(FAIL + 'Database unavailable, waiting 1 second...' + ENDC)
                 time.sleep(1)
 
-        self.stdout.write(self.style.SUCCESS('Database available!'))
+        self.stdout.write(OKGREEN + self.style.SUCCESS('Database available!') + ENDC)
 
