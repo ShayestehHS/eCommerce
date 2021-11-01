@@ -56,11 +56,11 @@ def get_cart(view):
     return _wrapped_view
 
 
-def send_request_to_zp(amount, email, mobile=None, description=settings.DEFAULT_ZP_DESCRIPTION):
+def send_request_to_zp(request, amount, email, mobile=None, description=settings.DEFAULT_ZP_DESCRIPTION):
     req_data = {
         "merchant_id": settings.MERCHANT,
         "amount": amount,  # Rial / Required
-        "callback_url": reverse('carts:zp_verify'),
+        "callback_url": request.build_absolute_uri(reverse('carts:zp_verify')),
         "description": description,
         "metadata": {"email": email}
     }
