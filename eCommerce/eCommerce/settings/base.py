@@ -158,3 +158,9 @@ EMAIL_USE_TLS = True
 
 MANAGERS = (('Hossein Shayesteh', 'shayestehhs1@Gmail.com'),)
 ADMINS = MANAGERS  # ToDo: Read the documentation
+
+MERCHANT = "-- CHANGE ME --"
+DEFAULT_ZP_DESCRIPTION = "'Payment page'"
+ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
+ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
+ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
