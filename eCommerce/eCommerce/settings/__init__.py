@@ -1,4 +1,4 @@
-setting_env = 'LOCAL'  # Choices are: LOCAL, PRODUCTION, TEST
+setting_env = 'PRODUCTION'  # Choices are: LOCAL, PRODUCTION, TEST
 # Colors
 ENDC = '\033[0m'
 WARNING = '\033[93m'
