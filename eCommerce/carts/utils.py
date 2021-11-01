@@ -1,3 +1,12 @@
+import json
+
+import requests
+
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.conf import settings
+from django.http import HttpResponse
+
 from functools import wraps
 
 from carts.models import Cart
@@ -45,3 +54,25 @@ def get_cart(view):
         return view(request, *args, **kwargs)
 
     return _wrapped_view
+
+
+def send_request_to_zp(amount, email, mobile=None, description=settings.DEFAULT_ZP_DESCRIPTION):
+    req_data = {
+        "merchant_id": settings.MERCHANT,
+        "amount": amount,  # Rial / Required
+        "callback_url": reverse('carts:zp_verify'),
+        "description": description,
+        "metadata": {"email": email}
+    }
+    if mobile:
+        req_data['metadata']['mobile'] = mobile
+    req_header = {"accept": "application/json",
+                  "content-type": "application/json'"}
+    req = requests.post(url=settings.ZP_API_REQUEST, data=json.dumps(req_data), headers=req_header)
+    authority = req.json()['data']['authority']
+    if len(req.json()['errors']) == 0:
+        return redirect(settings.ZP_API_STARTPAY.format(authority=authority))
+    else:
+        e_code = req.json()['errors']['code']
+        e_message = req.json()['errors']['message']
+        return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")

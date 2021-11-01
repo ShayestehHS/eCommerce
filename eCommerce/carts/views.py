@@ -1,13 +1,48 @@
+import requests
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
+from django.conf import settings
 
 from orders.models import Order
 from address.forms import AddressForm
 from carts.utils import get_cart
-from carts.models import Cart
+from carts.models import Cart, Payments
 from eCommerce.utils import is_valid_url, required_ajax
+
+
+@login_required
+def verify(request):
+    if request.GET.get('Status') != 'OK':
+        return HttpResponse('Transaction failed or canceled by user')
+
+    t_status = request.GET.get('Status')
+    t_authority = request.GET['Authority']
+    req_header = {"accept": "application/json", "content-type": "application/json'"}
+    req_data = {
+        "merchant_id": settings.MERCHANT,
+        "amount": Payments.objects.filter(user=request.user).latest().only('amount'),
+        "authority": t_authority
+    }
+
+    req = requests.post(url=settings.ZP_API_VERIFY, data=json.dumps(req_data), headers=req_header)
+    if len(req.json()['errors']) != 0:
+        e_code = req.json()['errors']['code']
+        e_message = req.json()['errors']['message']
+        return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
+
+    t_status = req.json()['data']['code']
+    if t_status == 100:
+        return HttpResponse("Transaction success.\nRefID: " + str(req.json()["data"]["ref_id"]))
+
+    elif t_status == 101:
+        return HttpResponse("Transaction submitted : " + str(req.json()['data']['message']))
+
+    else:
+        return HttpResponse('Transaction failed.\nStatus: ' + str(req.json()['data']['message']))
 
 
 @get_cart
@@ -99,13 +134,15 @@ def set_address_to_order(request, cart):
         return redirect('carts:checkout')
     return redirect(next_page)
 
+
 @login_required
 @get_cart
 def finalization(request, cart):
     order = Order.objects.get(cart=cart, status='shipped')
 
     if not order.check_done():  # address_shipping and address_billing is exists
-        messages.error(request, 'You have to fill both of billing and shipping addresses.')
+        messages.error(request,
+                       'You have to fill both of billing and shipping addresses.')
         return redirect('carts:home')
 
     order.total = cart.total
@@ -116,18 +153,21 @@ def finalization(request, cart):
     }
     return render(request, 'carts/finalization.html', context)
 
+
 @login_required
 @get_cart
 def done(request, cart):
     order = Order.objects.get(cart=cart, status='shipped')
 
     if not order.check_done():  # address_shipping and address_billing is exists
-        messages.error(request, 'You have to fill both of billing and shipping addresses.')
+        messages.error(request,
+                       'You have to fill both of billing and shipping addresses.')
         return redirect('carts:home')
 
     is_deactivated = order.deactivate_cart(request, checked=True)
     if not is_deactivated:
-        messages.error(request, 'Something bad is happening, Please contact to us')
+        messages.error(request,
+                       'Something bad is happening, Please contact to us')
         return redirect('carts:home')
     # ToDo: Send email to customer
     messages.success(request, 'Please wait for the doorbell to ring😎')

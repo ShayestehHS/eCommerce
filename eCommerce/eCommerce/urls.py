@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.HomeTemplateView.as_view(), name='home'),
     path('search/', views.SearchProductListView.as_view(), name='search'),
     path('search_ajax/', views.search_by_ajax, name='search_ajax'),
+    path('buy_me_a_coffee/', views.ByMeCoffeeFormView.as_view(), name='by_me_coffee'),
 
     path('admin/', admin.site.urls),
     path('products/', include('products.urls', namespace='products')),
