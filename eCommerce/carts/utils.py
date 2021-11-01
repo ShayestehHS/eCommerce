@@ -69,7 +69,15 @@ def send_request_to_zp(amount, email, mobile=None, description=settings.DEFAULT_
     req_header = {"accept": "application/json",
                   "content-type": "application/json'"}
     req = requests.post(url=settings.ZP_API_REQUEST, data=json.dumps(req_data), headers=req_header)
-    authority = req.json()['data']['authority']
+
+    try:
+        authority = req.json()['data']['authority']
+    except TypeError:
+        print("-- WE HAVE PROBLEM IN AUTHORITY IN (send_request_to_zp) --")
+        print(f"-- (req) IS: {req} --")
+        print(f"-- (req.json) IS: {req.json()} --")
+        print(f"-- (req.json()['data']) IS: {req.json()['data']} --")
+        return HttpResponse(status=500)
     if len(req.json()['errors']) == 0:
         return redirect(settings.ZP_API_STARTPAY.format(authority=authority))
     else:
