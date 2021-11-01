@@ -1,3 +1,5 @@
+import os
+
 from eCommerce.settings.base import *
 
 DEBUG = bool(int(os.getenv("DEBUG", default=0)))
@@ -37,3 +39,5 @@ DATABASES = {
 # SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # SECURE_HSTS_SECONDS = 1000000
 # SECURE_FRAME_DENY = True
+
+MERCHANT = os.getenv('MERCHANT')
