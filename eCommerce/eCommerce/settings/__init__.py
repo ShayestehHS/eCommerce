@@ -22,6 +22,6 @@ else:
     raise Exception(OKCYAN + '-- Invalid setting_env --' + ENDC)
 
 if DEBUG is True:
-    print(WARNING + "-- Debug mode is:" + FAIL + "ON --" + ENDC)
+    print(OKCYAN + "-- Debug mode is:" + FAIL + "ON --" + ENDC)
 else:
-    print(OKGREEN + "-- Debug mode is: OFF --" + ENDC)
+    print(OKCYAN + "-- Debug mode is:" + OKCYAN + "OFF --" + ENDC)
