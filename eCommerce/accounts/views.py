@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as login_user, logout as logout_user
-from django.core.exceptions import BadRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user_model
-from django.views.generic import CreateView, FormView
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, FormView, ListView
 
 from accounts.forms import RegisterForm, LoginForm, ContactEmailForm
 from accounts.utils import set_cart_to_user
@@ -60,16 +61,25 @@ class Login(FormView, MessageMixin):
         return redirect(self.get_success_url())
 
 
+class ProfileAccount(LoginRequiredMixin, ListView):
+    http_method_names = ['get']
+    model = User
+    template_name = 'accounts/profile.html'
+
+    def get_queryset(self):
+        return self.request.user
+
+
 class ContactEmailCreate(CreateView, MessageMixin):
+    http_method_names = ['post']
     message = 'Your message is received'
     message_level = messages.SUCCESS
     form_class = ContactEmailForm
     template_name = 'accounts/contact.html'
     context_object_name = 'form'
 
+    @method_decorator(required_ajax)
     def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST' and not request.is_ajax():
-            raise BadRequest('Request is not AJAX.')
         return super(ContactEmailCreate, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -95,35 +105,6 @@ class ContactEmailCreate(CreateView, MessageMixin):
             return super(ContactEmailCreate, self).get_initial()
 
         return {'email': user.email, 'full_name': user.full_name}
-
-
-# @require_http_methods(['GET', 'POST'])
-# def login(request):
-#     form = LoginForm(request.POST or None)
-#
-#     if not form.is_valid():
-#         context = {'form': form}
-#         return render(request, 'accounts/login.html', context)
-#
-#     # get values from Form
-#     email = form.cleaned_data.get('email')
-#     password = form.cleaned_data.get('password')
-#
-#     # Login the user
-#     user = authenticate(request, email=email, password=password)
-#     if user is None:
-#         messages.error(request, 'Please try again.')
-#         return redirect('accounts:login')
-#     login_user(request, user)
-#     messages.success(request, 'You successfully logged in.')
-#
-#     set_cart_to_user(request)
-#
-#     # redirect user
-#     next_page = request.GET.get('next') or request.POST.get('next')
-#     if not is_valid_url(request, next_page):
-#         return redirect('home')
-#     return redirect(next_page)
 
 
 def logout(request):

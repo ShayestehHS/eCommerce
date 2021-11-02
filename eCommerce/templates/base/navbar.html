@@ -71,6 +71,9 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
+                                <a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a>
+                            </li>
+                            <li>
                                 <a class="dropdown-item" href="{% url 'accounts:contact' %}">Contact</a>
                             </li>
                             <li>
@@ -84,7 +87,7 @@
                         </ul>
                     </li>
                 </ul>
-                <form action="{% url 'search' %}" method="GET"
+                <form action="{% url 'search_ajax' %}" method="GET"
                       class="d-flex" id="form-search" data-ajax-url="{% url 'search_ajax' %}">
                     <input class="form-control me-2" type="search"
                            placeholder="Search" aria-label="Search"
