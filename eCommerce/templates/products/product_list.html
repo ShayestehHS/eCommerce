@@ -4,7 +4,7 @@
 {% block title %}All products{% endblock title %}
 
 {% block content %}
-    {% url 'search' as search_url %}
+    {% url 'search_ajax' as search_url %}
     {% if request.GET.q and request.path == search_url %}
         <div class="container">
             You searched for '{{ request.GET.q }}'
