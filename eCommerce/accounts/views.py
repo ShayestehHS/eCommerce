@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as login_user, logout as logout_user
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -9,9 +8,9 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, FormView, ListView
 
 from accounts.forms import RegisterForm, LoginForm, ContactEmailForm
-from accounts.utils import set_cart_to_user
+from accounts.utils import CustomLoginRequiredMixin, set_cart_to_user
 from analytics.signals import user_logged_in_signal
-from eCommerce.utils import get_admin_emails, is_valid_url, EmailService, required_ajax
+from eCommerce.utils import get_admin_emails, is_valid_url, custom_send_email, required_ajax
 from eCommerce.mixins import MessageMixin
 
 User = get_user_model()
@@ -50,7 +49,11 @@ class Login(FormView, MessageMixin):
 
         user = authenticate(request, email=email, password=password)
         if user is None:
-            messages.error(request, 'Please try again.')
+            user = User.objects.filter(email=email).only('is_active').first()
+            if not user.is_active:
+                messages.error(request, 'This email is inactive')
+            else:
+                messages.error(request, 'Please try again.')
             return redirect('accounts:login')
 
         login_user(request, user)
@@ -61,7 +64,7 @@ class Login(FormView, MessageMixin):
         return redirect(self.get_success_url())
 
 
-class ProfileAccount(LoginRequiredMixin, ListView):
+class ProfileAccount(CustomLoginRequiredMixin, ListView):
     http_method_names = ['get']
     model = User
     template_name = 'accounts/profile.html'
@@ -86,7 +89,7 @@ class ContactEmailCreate(CreateView, MessageMixin):
         form = form.save(commit=False)
         form.user = self.request.user if self.request.user.is_authenticated else None
         form.save()
-        EmailService.send_email(
+        custom_send_email(
             title=f'Contact email from {form.email}',
             to=get_admin_emails(),
             context={'msg_model': form},

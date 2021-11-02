@@ -2,14 +2,15 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
+
+from accounts.utils import CustomLoginRequiredMixin
 from address.models import Address
 from orders.models import Order
 
 User = get_user_model()
 
 
-class AddressListView(LoginRequiredMixin, ListView):
+class AddressListView(CustomLoginRequiredMixin, ListView):
     model = Address
     queryset = Address.objects.filter(user__isnull=False)
     http_method_names = ['get']
