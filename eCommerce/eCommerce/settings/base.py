@@ -142,9 +142,9 @@ LOGIN_REDIRECT_URL = reverse_lazy('home')
 LIMIT_SESSION = True
 LIMIT_SESSION_COUNT = 1
 
-MAILCHIMP_API_KEY = os.getenv('MAILCHIMP_API_KEY')
-MAILCHIMP_DATA_CENTER = os.getenv('MAILCHIMP_DATA_CENTER')
-MAILCHIMP_PUB_KEY = os.getenv('MAILCHIMP_PUB_KEY')
+MAILCHIMP_API_KEY = "-- CHANGE ME --"
+MAILCHIMP_DATA_CENTER = "-- CHANGE ME --"
+MAILCHIMP_PUB_KEY = "-- CHANGE ME --"
 
 # Email settings
 # EMAIL_DATA : January/20/2000 , Male
@@ -160,7 +160,7 @@ MANAGERS = (('Hossein Shayesteh', 'shayestehhs1@Gmail.com'),)
 ADMINS = MANAGERS  # ToDo: Read the documentation
 
 MERCHANT = "-- CHANGE ME --"
-DEFAULT_ZP_DESCRIPTION = "'Payment page'"
+DEFAULT_ZP_DESCRIPTION = "Thank you"
 ZP_API_REQUEST = "https://api.zarinpal.com/pg/v4/payment/request.json"
 ZP_API_VERIFY = "https://api.zarinpal.com/pg/v4/payment/verify.json"
 ZP_API_STARTPAY = "https://www.zarinpal.com/pg/StartPay/{authority}"
