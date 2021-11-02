@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.full_name }}{% endblock title %}
+
+{% block content %}
+
+    <div class='row'>
+        <div class='col-12'>
+            <h1>Account</h1>
+            <hr/>
+        </div>
+
+        <div class='col-12 col-md-3 my-3'>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Support</h4>
+                    <div class='list-group'>
+                        <a class='list-group-item' href='{% url "about" %}'>About</a>
+                        <a class='list-group-item' href='{% url "contact" %}'>Contact</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class='col-12 col-md-3 my-3' id='billing'>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Billing</h4>
+                    <div class='list-group'>
+                        <a class='list-group-item' href='{% url "orders:list" %}'>Orders</a>
+                        <a class='list-group-item' href='#'>Payment Methods</a>
+                        <a class='list-group-item' href='#'>Addresses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class='col-12 col-md-3 my-3'>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Account Details</h4>
+                    <div class='list-group'>
+                        <a class='list-group-item' href='#'>Update Details</a>
+                        <a class='list-group-item' href='{% url 'accounts:password_change' %}'>Change Password</a>
+                        <a class='list-group-item' href='#'>Library</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class='col-12 col-md-3 my-3'>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Preferences</h4>
+                    <div class='list-group'>
+                        <a class='list-group-item' href='#'>Email Marketing</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class='col-12 col-md-3 my-3'>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">History</h4>
+                    <div class='list-group'>
+                        <a class='list-group-item' href='#'>Products</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
