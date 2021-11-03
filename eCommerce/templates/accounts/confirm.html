@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm email{% endblock title %}
+
+{% block content %}
+
+    <h1>{{ chance_to_try }}</h1>
+    <form action="{% url 'accounts:confirm' %}?uuc={{ request.GET.uuc }}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <small>{{ form.chance_to_try.error }}</small>
+        <input type="submit" value="Check">
+    </form>
+
+{% endblock content %}

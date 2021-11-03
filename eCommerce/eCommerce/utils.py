@@ -12,13 +12,10 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class EmailService:
-
-    @staticmethod
-    def send_email(title, to, context, template_name):
-        html_message = render_to_string(template_name, context)
-        plain_message = strip_tags(html_message)
-        send_mail(title, plain_message, settings.EMAIL_HOST_USER, to, html_message=html_message)
+def custom_send_email(title, to, context, template_name):
+    html_message = render_to_string(template_name, context)
+    plain_message = strip_tags(html_message)
+    send_mail(title, plain_message, settings.EMAIL_HOST_USER, to, html_message=html_message)
 
 
 def get_admin_emails():

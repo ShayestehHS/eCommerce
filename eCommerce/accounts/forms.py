@@ -41,6 +41,16 @@ class RegisterForm(forms.ModelForm):
             fields[field].widget.attrs.update({'class': 'form-control'})
 
 
+class ConfirmForm(forms.Form):
+    confirm_code = forms.IntegerField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        fields = self.fields
+        for field in fields:
+            fields[field].widget.attrs.update({'class': 'form-control'})
+
+
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=127)
     password = forms.CharField(max_length=128, widget=forms.PasswordInput)

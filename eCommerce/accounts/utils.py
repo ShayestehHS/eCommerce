@@ -1,3 +1,5 @@
+from random import randint
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -5,6 +7,12 @@ from django.contrib import messages
 from carts.models import Cart
 from carts.utils import get_cart_id_from_session
 from eCommerce.utils import update_session
+
+
+def create_email_code(n):
+    range_start = 10 ** (n - 1)
+    range_end = (10 ** n) - 1
+    return randint(range_start, range_end)
 
 
 def set_cart_to_user(request):

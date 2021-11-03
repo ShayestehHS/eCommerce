@@ -40,15 +40,17 @@ class Mailchimp(object):
 
         try:
             response = self.mailchimp.lists.get_list_member(self.list_id, member_email_hash)
+
         except ApiClientError as error:
-            raise Exception(f"An exception occurred: {error.text}")
+            # Based on documentation: 'If the call returns an error response, the contact is not on the list.'
+            return 'unsubscribed'
 
         return response.get('status')
 
     def subscribe(self, email, **kwargs):
         email_status = self.get_subscription_status(email)
         if email_status == "subscribed":
-            print(f"{email} is already a list member")
+            # print(f"{email} is already a list member")
             return True
 
         member_info = {"email_address": email, "status": "subscribed"}
