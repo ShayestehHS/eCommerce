@@ -7,7 +7,7 @@ USER = settings.AUTH_USER_MODEL
 class MarketingPreference(models.Model):
     user = models.OneToOneField(USER, on_delete=models.CASCADE)
     is_subscribed = models.BooleanField(default=True)
-    is_mailchimp_subscribed = models.BooleanField(null=True)
+    is_mailchimp_subscribed = models.BooleanField(null=True, default=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
