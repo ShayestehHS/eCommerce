@@ -7,15 +7,15 @@ User = get_user_model()
 
 
 class RegisterForm(forms.ModelForm):
-    password1 = forms.CharField(max_length=128, widget=forms.PasswordInput)
-    password2 = forms.CharField(max_length=128, widget=forms.PasswordInput)
+    password1 = forms.CharField(max_length=127, widget=forms.PasswordInput)
+    password2 = forms.CharField(max_length=127, widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ('email', 'full_name')
+        fields = ['email', 'full_name']
         widgets = {
             'email': forms.EmailInput(attrs={'placeholder': "Should be unique"}),
-            'full_name': forms.EmailInput(attrs={'placeholder': "We will call you by this name"}),
+            'full_name': forms.TextInput(attrs={'placeholder': "We will call you by this name"}),
         }
 
     def clean_password2(self):
@@ -28,7 +28,6 @@ class RegisterForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
-        # user.is_active = False ToDo: Send verification email to user
         if commit:
             user.set_password(self.cleaned_data['password1'])
             user.save()

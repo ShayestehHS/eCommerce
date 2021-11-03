@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as login_user, logout as logout_user
 from django.http import JsonResponse

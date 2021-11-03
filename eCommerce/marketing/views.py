@@ -38,7 +38,7 @@ class UpdateSubscription(MessageMixin, UpdateView):
 
 
 # CsrfExemptMixin
-class MailchimpWebhookView(View): # ToDo: Set webhook to mailchimp
+class MailchimpWebhookView(View):  # ToDo: Set webhook to mailchimp
     def post(self, request, *args, **kwargs):
         data = request.POST
         list_id = data.get('data[list_id]')
@@ -46,9 +46,11 @@ class MailchimpWebhookView(View): # ToDo: Set webhook to mailchimp
             return HttpResponse('Invalid key')
         email = data.get("data[email]")
         status = Mailchimp().get_subscription_status(email)
-        is_subbed = is_mailchimp_subbed = None
+        is_subbed = None
+        is_mailchimp_subbed = None
         if status == "subscribed":
             is_subbed = is_mailchimp_subbed = True
+
         elif status == "unsubscribed":
             is_subbed = is_mailchimp_subbed = False
 
