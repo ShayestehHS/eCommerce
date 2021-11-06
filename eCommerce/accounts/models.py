@@ -19,8 +19,10 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(email, password, **kwargs)
 
         user.is_superuser = True
+        user.is_registered = True
         user.is_staff = True
-        user.save(using=self._db, update_fields=['is_superuser', 'is_staff'])
+        user.full_name = "Admin"
+        user.save(using=self._db, update_fields=['is_superuser', 'is_staff', 'is_registered','full_name'])
 
         return user
 
