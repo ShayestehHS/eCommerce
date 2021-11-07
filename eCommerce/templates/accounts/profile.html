@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ user.full_name }}{% endblock title %}
 
@@ -42,7 +43,8 @@
                 <div class="card-body">
                     <h4 class="card-title">Account Details</h4>
                     <div class='list-group'>
-                        <a class='list-group-item' href='#'>Update Details</a>
+                        <a class='list-group-item' href="#" id="btn_user_detail"
+                           data-url_update_detail="{% url 'accounts:update-detail' %}">Update Details</a>
                         <a class='list-group-item' href='{% url 'accounts:password_change' %}'>Change Password</a>
                         <a class='list-group-item' href='#'>Library</a>
                     </div>
@@ -75,5 +77,23 @@
         </div>
     </div>
 
-
+    <!-- Modal -->
+    <div class="modal fade" id="modal_user_detail" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Change detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock js %}

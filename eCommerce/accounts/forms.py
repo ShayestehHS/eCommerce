@@ -9,7 +9,15 @@ from analytics.signals import user_logged_in_signal
 User = get_user_model()
 
 
-class RegisterForm(forms.ModelForm):
+class ChangeDetailForm(BootstrapFieldsForm, forms.ModelForm):
+    full_name = forms.CharField(max_length=127)
+
+    class Meta:
+        model = User
+        fields = ['full_name']
+
+
+class RegisterForm(BootstrapFieldsForm, forms.ModelForm):
     password1 = forms.CharField(max_length=127, widget=forms.PasswordInput)
     password2 = forms.CharField(max_length=127, widget=forms.PasswordInput)
 

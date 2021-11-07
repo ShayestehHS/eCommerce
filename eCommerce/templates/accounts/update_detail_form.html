@@ -1,0 +1,7 @@
+<form action="{% url 'accounts:update-detail' %}" method="POST" id="form_user_detail">
+    {% csrf_token %}
+    <label>Email:</label>
+    <input type="email" value="{{ request.user.email }}" class="form-control disabled mb-3" disabled>
+    {{ form.as_p }}
+    <input type="submit" value="Submit" class="btn btn-success">
+</form>

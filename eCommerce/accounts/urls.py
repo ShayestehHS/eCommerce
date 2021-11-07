@@ -9,7 +9,6 @@ urlpatterns = [
     path('resend-email/', views.resend_confirm_email, name='resend-email'),
 
     path('profile/', views.ProfileAccount.as_view(), name='profile'),
-    path('contact/', views.ContactEmailCreate.as_view(), name='contact'),
-    path('login/', views.Login.as_view(), name='login'),
+    path('profile/update-detail/', views.UserDetailUpdateView.as_view(), name='update-detail'),
     path('check_email/', views.check_email, name='check_email'),
 ]
