@@ -1,5 +1,10 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
+
+from accounts.utils import create_email_code
+from eCommerce.utils import custom_send_email
 
 
 class CustomUserManager(BaseUserManager):
@@ -22,7 +27,7 @@ class CustomUserManager(BaseUserManager):
         user.is_registered = True
         user.is_staff = True
         user.full_name = "Admin"
-        user.save(using=self._db, update_fields=['is_superuser', 'is_staff', 'is_registered','full_name'])
+        user.save(using=self._db, update_fields=['is_superuser', 'is_staff', 'is_registered', 'full_name'])
 
         return user
 
@@ -36,21 +41,39 @@ class User(AbstractUser):
     unique_code = models.CharField(null=True, blank=True, max_length=16)
     confirm_code = models.PositiveIntegerField(null=True, blank=True)
     chance_to_try = models.PositiveSmallIntegerField(default=3)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
     is_registered = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def send_activation_email(self):
+        self.unique_code = uuid.uuid4().hex[:16].upper()
+        self.confirm_code = create_email_code(6)
+        self.save(update_fields=['unique_code', 'confirm_code'])
+
+        custom_send_email(title="Email confirmation", to=[self.email],
+                          context={'unique_code': self.confirm_code},
+                          template_name='email/confirm_code.html')
+
+    def fail_activation(self):
+        try:
+            self.delete()
+        except:
+            self.is_active = False
+            self.save(update_fields=['is_active'])
+            # ToDo: Log this situation
+
+    def register(self):
+        self.is_registered = True
+        self.save(update_fields=['chance_to_try', 'is_registered'])
+
     def __str__(self):
         return self.email
 
 
-class ContactEmail(models.Model):
+class ContactEmail(models.Model):  # Contact to us
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     full_name = models.CharField(max_length=127)
     email = models.EmailField()
