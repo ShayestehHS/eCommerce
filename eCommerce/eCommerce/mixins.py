@@ -1,5 +1,7 @@
 from django.contrib import messages
 
+from eCommerce.utils import is_valid_url
+
 
 class MessageMixin(object):
     message = ''
@@ -18,3 +20,23 @@ class MessageMixin(object):
         response = super(MessageMixin, self).dispatch(*args, **kwargs)
         self.send_message(self.request)
         return response
+
+
+class NextUrlMixin(object):
+    default_next = "/"
+
+    def get_form_kwargs(self):
+        request = self.request
+        next_url_get = request.GET.get('next')
+        next_url_post = request.POST.get('next')
+        redirect_path = next_url_get or next_url_post or None
+        if not is_valid_url(request, redirect_path):
+            return self.default_next
+        return redirect_path
+
+
+class RequestFormAttachMixin(object):
+    def get_form_kwargs(self):
+        kwargs = super(RequestFormAttachMixin, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs

@@ -48,7 +48,7 @@ class Order(models.Model):
         cart.is_active = False
         cart.save(update_fields=['is_active'])
 
-        new_cart = Cart.objects.create(user_id=user_id)
+        new_cart = Cart.objects.new(request)
 
         update_session(request, new_cart, is_new=True)
 

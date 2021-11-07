@@ -7,20 +7,12 @@ from django.utils.http import is_safe_url
 from django.utils.html import strip_tags
 from django.contrib import messages
 from django.template.loader import render_to_string
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 
 def custom_send_email(title, to, context, template_name):
     html_message = render_to_string(template_name, context)
     plain_message = strip_tags(html_message)
     send_mail(title, plain_message, settings.EMAIL_HOST_USER, to, html_message=html_message)
-
-
-def get_admin_emails():
-    email_list = User.objects.filter(is_superuser=True).values_list('email', flat=True)
-    return list(email_list)
 
 
 def is_valid_url(request, url, require_https=False):

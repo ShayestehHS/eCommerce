@@ -32,7 +32,7 @@ def subscribe_user_on_create(sender, instance, created, *args, **kwargs):
 
 @receiver(post_save, sender=USER)
 def create_marketing_pref_for_user(sender, instance, created, *args, **kwargs):
-    if created and not MarketingPreference.objects.filter(user=instance).exists():
+    if created and not MarketingPreference.objects.filter(user__id=instance.id).exists():
         MarketingPreference.objects.create(user=instance)
     ## Low performance:
     # if created:

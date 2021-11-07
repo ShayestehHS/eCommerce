@@ -1,9 +1,5 @@
 from random import randint
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
-from django.contrib import messages
-
 from carts.models import Cart
 from carts.utils import get_cart_id_from_session
 from eCommerce.utils import update_session
@@ -38,15 +34,3 @@ def set_cart_to_user(request):
     cart.save(update_fields=['user_id'])
     return True
 
-
-class CustomLoginRequiredMixin(LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.error(request, "You have to authenticate first.")
-            return redirect('home')
-
-        if not request.user.is_active:
-            messages.error(request, 'This user is inactive.')
-            return redirect('home')
-
-        return super(CustomLoginRequiredMixin, self).dispatch(request, *args, **kwargs)

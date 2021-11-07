@@ -56,7 +56,9 @@ class Mailchimp(object):
         member_info = {"email_address": email, "status": "subscribed"}
         try:
             response = self.mailchimp.lists.add_list_member(self.list_id, member_info)
+
         except ApiClientError as error:
+            # Access denied? => Turn on vpn
             raise Exception(f"An exception occurred: {error.text}")
 
         return response.get('status') == "subscribed"

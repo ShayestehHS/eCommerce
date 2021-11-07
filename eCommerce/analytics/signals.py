@@ -6,8 +6,8 @@ from django.dispatch import Signal, receiver
 from analytics.models import ObjectViewed, UserSession
 from analytics.utils import get_client_ip
 
-LIMIT_SESSION = getattr(settings, 'FORCE_SESSION', 1)
-LIMIT_SESSION_COUNT = getattr(settings, 'FORCE_SESSION_COUNT', False)
+LIMIT_SESSION = getattr(settings, 'FORCE_SESSION', True)
+LIMIT_SESSION_COUNT = getattr(settings, 'FORCE_SESSION_COUNT', 1)
 object_viewed_signal = Signal(providing_args=['instance', 'request'])
 user_logged_in_signal = Signal(providing_args=['instance', 'request'])
 
@@ -32,8 +32,12 @@ def object_viewed_signal_receiver(sender, instance, request, *args, **kwargs):
 
 
 def user_session_post_save(sender, instance, created, *args, **kwargs):
+    print(created)
     if created:
-        old_user_sessions = UserSession.objects.filter(user=instance.user, ended=False, active=False).exclude(id=instance.id)
+        print('user: '+ str(instance.user))
+        print('user: '+ str(instance.id))
+        old_user_sessions = UserSession.objects.filter(user=instance.user, ended=False, active=True).exclude(id=instance.id)
+        print(old_user_sessions.count())
         if old_user_sessions.count() >= LIMIT_SESSION_COUNT:
             objs = []
             for session in old_user_sessions:

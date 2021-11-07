@@ -95,9 +95,9 @@ class ConfirmView(FormView):
         return context
 
 
-class Login(FormView, MessageMixin):
-    http_method_names = ['post', 'get']
+class Login(NextUrlMixin, RequestFormAttachMixin, FormView, MessageMixin):  # ToDo
     form_class = LoginForm
+    http_method_names = ['post', 'get']
     template_name = 'accounts/login.html'
     success_url = reverse_lazy('home')
 
@@ -154,9 +154,11 @@ class ContactEmailCreate(CreateView, MessageMixin):
         form = form.save(commit=False)
         form.user = self.request.user if self.request.user.is_authenticated else None
         form.save()
+        admin_email_list = User.objects.filter(is_superuser=True).values_list('email', flat=True)
+
         custom_send_email(
             title=f'Contact email from {form.email}',
-            to=get_admin_emails(),
+            to=admin_email_list,
             context={'msg_model': form},
             template_name='email/contact_email.html'
         )
