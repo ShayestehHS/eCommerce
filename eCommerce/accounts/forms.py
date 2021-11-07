@@ -1,7 +1,10 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login
 
 from accounts.models import ContactEmail
+from accounts.utils import set_cart_to_user
+from analytics.signals import user_logged_in_signal
 
 User = get_user_model()
 
@@ -54,6 +57,32 @@ class LoginForm(forms.Form):
     email = forms.EmailField(max_length=127)
     password = forms.CharField(max_length=128, widget=forms.PasswordInput)
 
+    def clean(self):
+        request = self.request
+        data = self.cleaned_data
+        email = data.get('email')
+        password = data.get('password')
+
+        if request.user.is_authenticated:
+            return self.add_error('email', 'This email is authenticated before.')
+
+        user = authenticate(request, email=email, password=password)
+        if user is None:
+            user = User.objects.filter(email=email).only('is_active').first()
+            if not user.is_active:
+                messages.error(request, 'This email is inactive')
+
+            elif not user.is_registered:
+                messages.error(request, "Please register your email and try again.")
+
+            else:  # ToDo: Correct way to raise error in clean method
+                return self.add_error('password', 'Password is not correct')
+        login(request, user)
+        set_cart_to_user(request)
+        user_logged_in_signal.send(user.__class__, instance=user, request=request)
+
+        return data
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if email is None:
@@ -65,8 +94,9 @@ class LoginForm(forms.Form):
 
         return email
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, request, *args, **kwargs):
+        self.request = request
+        super(LoginForm, self).__init__(*args, **kwargs)
         fields = self.fields
         for field in fields:
             fields[field].widget.attrs.update({'class': 'form-control'})

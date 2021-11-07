@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 from eCommerce.utils import is_valid_url
 
@@ -23,9 +24,9 @@ class MessageMixin(object):
 
 
 class NextUrlMixin(object):
-    default_next = "/"
+    default_next = reverse_lazy('home')
 
-    def get_form_kwargs(self):
+    def get_success_url(self):
         request = self.request
         next_url_get = request.GET.get('next')
         next_url_post = request.POST.get('next')
@@ -36,6 +37,11 @@ class NextUrlMixin(object):
 
 
 class RequestFormAttachMixin(object):
+
+    def __init__(self):
+        super(RequestFormAttachMixin, self).__init__()
+        print('request form attach mixin')
+
     def get_form_kwargs(self):
         kwargs = super(RequestFormAttachMixin, self).get_form_kwargs()
         kwargs['request'] = self.request
