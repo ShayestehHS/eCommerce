@@ -11,5 +11,6 @@
         <small>{{ form.chance_to_try.error }}</small>
         <input type="submit" value="Check">
     </form>
+    <a href="{% url 'accounts:resend-email' %}?uuc={{ request.GET.uuc }}" class="btn btn-dark">Didn't get email?</a> {# ToDo: Check this feature is working correctly or not #}
 
 {% endblock content %}

@@ -159,5 +159,15 @@ def check_email(request):
 
 
 def resend_confirm_email(request):
+    user = request.user
+    not_permission_to_resend = not user.is_anonymous or user.is_authenticated or user.is_active
+    if not_permission_to_resend:
+        messages.error(request, "You don't have permission to do this action.")
+        return redirect('home')
+
     user_unique_code = request.GET.get('uuc')
     user = User.objects.get(unique_code__iexact=user_unique_code)
+    user.send_activation_email()
+    base_url = reverse('accounts:confirm')
+    messages.success(request, 'Email is sent successfully.')
+    return HttpResponseRedirect(base_url + f"?uuc={user.unique_code}")
