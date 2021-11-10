@@ -4,6 +4,14 @@ from django.urls import reverse_lazy
 from eCommerce.utils import is_valid_url
 
 
+class BootstrapFieldsForm(object):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        fields = self.fields
+        for field in fields:
+            fields[field].widget.attrs.update({'class': 'form-control'})
+
+
 class MessageMixin(object):
     message = ''
     message_level = messages.SUCCESS  # Default tag

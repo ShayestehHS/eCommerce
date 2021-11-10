@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, get_user_model, login
 from accounts.models import ContactEmail
 from accounts.utils import set_cart_to_user
 from analytics.signals import user_logged_in_signal
+from eCommerce.mixins import BootstrapFieldsForm
 
 User = get_user_model()
 
@@ -44,24 +45,12 @@ class RegisterForm(BootstrapFieldsForm, forms.ModelForm):
             user.save()
         return user
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        fields = self.fields
-        for field in fields:
-            fields[field].widget.attrs.update({'class': 'form-control'})
 
-
-class ConfirmForm(forms.Form):
+class ConfirmForm(BootstrapFieldsForm, forms.Form):
     confirm_code = forms.IntegerField()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        fields = self.fields
-        for field in fields:
-            fields[field].widget.attrs.update({'class': 'form-control'})
 
-
-class LoginForm(forms.Form):
+class LoginForm(BootstrapFieldsForm, forms.Form):
     email = forms.EmailField(max_length=127)
     password = forms.CharField(max_length=128, widget=forms.PasswordInput)
 
@@ -105,18 +94,9 @@ class LoginForm(forms.Form):
     def __init__(self, request, *args, **kwargs):
         self.request = request
         super(LoginForm, self).__init__(*args, **kwargs)
-        fields = self.fields
-        for field in fields:
-            fields[field].widget.attrs.update({'class': 'form-control'})
 
 
-class ContactEmailForm(forms.ModelForm):
+class ContactEmailForm(BootstrapFieldsForm, forms.ModelForm):
     class Meta:
         model = ContactEmail
         fields = ("email", "full_name", 'message')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        fields = self.fields
-        for field in fields:
-            fields[field].widget.attrs.update({'class': 'form-control'})
