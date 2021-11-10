@@ -34,6 +34,9 @@ class MessageMixin(object):
 class NextUrlMixin(object):
     default_next = reverse_lazy('home')
 
+    def dispatch(self, *args, **kwargs):
+        return super(NextUrlMixin, self).dispatch(*args, **kwargs)
+
     def get_success_url(self):
         request = self.request
         next_url_get = request.GET.get('next')
@@ -41,14 +44,10 @@ class NextUrlMixin(object):
         redirect_path = next_url_get or next_url_post or None
         if not is_valid_url(request, redirect_path):
             return self.default_next
-        return redirect_path
+        return "/" + redirect_path
 
 
 class RequestFormAttachMixin(object):
-
-    def __init__(self):
-        super(RequestFormAttachMixin, self).__init__()
-        print('request form attach mixin')
 
     def get_form_kwargs(self):
         kwargs = super(RequestFormAttachMixin, self).get_form_kwargs()

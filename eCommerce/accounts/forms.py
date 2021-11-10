@@ -60,17 +60,16 @@ class LoginForm(BootstrapFieldsForm, forms.Form):
         email = data.get('email')
         password = data.get('password')
 
-        if request.user.is_authenticated:
-            return self.add_error('email', 'This email is authenticated before.')
-
         user = authenticate(request, email=email, password=password)
         if user is None:
             user = User.objects.filter(email=email).only('is_active').first()
             if not user.is_active:
                 messages.error(request, 'This email is inactive')
+                return self.add_error('email', 'This email is inactive')
 
             elif not user.is_registered:
                 messages.error(request, "Please register your email and try again.")
+                return self.add_error('email', "Please register your email and try again.")
 
             else:  # ToDo: Correct way to raise error in clean method
                 return self.add_error('password', 'Password is not correct')

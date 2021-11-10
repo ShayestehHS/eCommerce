@@ -42,6 +42,7 @@ class User(AbstractUser):
     confirm_code = models.PositiveIntegerField(null=True, blank=True)
     chance_to_try = models.PositiveSmallIntegerField(default=3)
     is_registered = models.BooleanField(default=False)
+    # ToDo: Activation can expire after some days.
 
     objects = CustomUserManager()
 
@@ -49,9 +50,10 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     def send_activation_email(self):
-        self.unique_code = uuid.uuid4().hex[:16].upper()
+        self.is_registered = False
         self.confirm_code = create_email_code(6)
-        self.save(update_fields=['unique_code', 'confirm_code'])
+        self.unique_code = uuid.uuid4().hex[:16].upper()
+        self.save(update_fields=['is_registered', 'confirm_code', 'unique_code'])
 
         custom_send_email(title="Email confirmation", to=[self.email],
                           context={'unique_code': self.confirm_code},

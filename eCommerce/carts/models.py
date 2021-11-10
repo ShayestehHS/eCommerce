@@ -13,8 +13,10 @@ User = settings.AUTH_USER_MODEL
 class CartManager(models.Manager):
     def new(self, request, **kwargs):
         user = request.user if request.user.is_authenticated else None
-        cart = self.model.objects.create(user=user, **kwargs)
+        if user and not user.is_registered:
+            raise Exception("User is not registered")
 
+        cart = self.model.objects.create(user=user, **kwargs)
         old_cart_id = request.session.get('cart_id')
         if old_cart_id:
             self.model.objects.filter(id=old_cart_id, user=None).delete()
@@ -55,7 +57,7 @@ class Cart(models.Model):
     total = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Maximum subtotal is 99999.99')
     subtotal = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Maximum subtotal is 99999.99')
     last_update = models.DateTimeField(auto_now=True)
-    crated = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
     objects = CartManager()

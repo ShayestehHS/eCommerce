@@ -47,6 +47,11 @@ def verify(request):
 
 @get_cart
 def cart_home(request, cart):
+    user = request.user
+    if not user.is_active or not user.is_registered:
+        messages.error(request, "You don't have permission to this page.")
+        return redirect('home')
+
     products = cart.products.values('id', 'name', 'price')
 
     context = {
@@ -166,8 +171,7 @@ def done(request, cart):
 
     is_deactivated = order.deactivate_cart(request, checked=True)
     if not is_deactivated:
-        messages.error(request,
-                       'Something bad is happening, Please contact to us')
+        messages.error(request, 'Something bad is happening, Please contact to us')
         return redirect('carts:home')
     # ToDo: Send email to customer
     messages.success(request, 'Please wait for the doorbell to ring😎')
