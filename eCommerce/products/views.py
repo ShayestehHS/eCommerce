@@ -1,9 +1,30 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 
 from analytics.mixins import ObjectViewedMixin
 from carts import utils
 from carts.models import Cart
 from products.models import Product
+
+
+class UserProductHistoryListView(LoginRequiredMixin, ListView):
+    queryset = Product.objects.all()
+    context_object_name = 'products'
+    template_name = 'products/user_history.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        obj_viewed = self.request.user.objectviewed_set.get_object(Product, self.paginate_by, 'id', 'name', 'image', 'slug', 'description')
+        return obj_viewed
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(UserProductHistoryListView, self).get_context_data(*args, **kwargs)
+        try:
+            cart = Cart.objects.get(user=self.request.user, is_active=True)
+            context['all_id'] = cart.products.all_id()
+        except (Cart.DoesNotExist, TypeError) as e:
+            pass
+        return context
 
 
 class ProductListView(ListView):
