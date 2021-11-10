@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}User history{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            {% if object_list|length == 0 %}
+                {% for obj in object_list %}
+                    <div class="col">
+                        {{ forloop.counter }}
+                        {% include 'products/card.html' with product=obj %}
+                    </div>
+                    <a href="#" class="btn btn-danger">Clear history</a>
+                {% endfor %}
+            {% else %}
+                <div class="row">
+                    <div class="col text-center">
+                        <h1>Your history is clear.</h1>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock content %}

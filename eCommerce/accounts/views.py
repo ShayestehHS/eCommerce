@@ -1,14 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import login as login_user, logout as logout_user
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import get_user_model
-from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, FormView, ListView
+from django.views.generic import CreateView, FormView, ListView, UpdateView
 
-from accounts.forms import ConfirmForm, RegisterForm, LoginForm, ContactEmailForm
+from accounts.forms import ConfirmForm, RegisterForm, LoginForm, ChangeDetailForm
 from carts.models import Cart
 from eCommerce.utils import custom_send_email, required_ajax
 from eCommerce.mixins import MessageMixin, NextUrlMixin, RequestFormAttachMixin
@@ -16,7 +15,7 @@ from eCommerce.mixins import MessageMixin, NextUrlMixin, RequestFormAttachMixin
 User = get_user_model()
 
 
-class Register(CreateView, MessageMixin):  # ToDo: Should send email confirmation
+class Register(CreateView, MessageMixin):
     model = User
     form_class = RegisterForm
     template_name = 'accounts/register.html'
@@ -89,7 +88,16 @@ class Login(NextUrlMixin, RequestFormAttachMixin, FormView):
     http_method_names = ['post', 'get']
     template_name = 'accounts/login.html'
 
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            messages.success(self.request, 'You successfully logged in.')
+            return redirect('home')
+
+        self.success_url = self.get_success_url()
+        return super(Login, self).post(request, *args, **kwargs)
+
     def form_valid(self, form):
+        # User is logged in.
         messages.success(self.request, 'You successfully logged in.')
         return super(Login, self).form_valid(form)
 
@@ -103,43 +111,12 @@ class ProfileAccount(LoginRequiredMixin, ListView):
         return self.request.user
 
 
-class ContactEmailCreate(CreateView, MessageMixin):
-    http_method_names = ['post']
-    message = 'Your message is received'
-    message_level = messages.SUCCESS
-    form_class = ContactEmailForm
-    template_name = 'accounts/contact.html'
-    context_object_name = 'form'
+class UserDetailUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = ChangeDetailForm
+    template_name = 'accounts/update_detail_form.html'
 
-    @method_decorator(required_ajax)
-    def dispatch(self, request, *args, **kwargs):
-        return super(ContactEmailCreate, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        form = form.save(commit=False)
-        form.user = self.request.user if self.request.user.is_authenticated else None
-        form.save()
-        admin_email_list = User.objects.filter(is_superuser=True).values_list('email', flat=True)
-
-        custom_send_email(
-            title=f'Contact email from {form.email}',
-            to=admin_email_list,
-            context={'msg_model': form},
-            template_name='email/contact_email.html'
-        )
-        return JsonResponse({})
-
-    def form_invalid(self, form):
-        self.message = 'You form is not valid'
-        self.message_level = messages.ERROR
-        return super(ContactEmailCreate, self).form_invalid(form)
-
-    def get_initial(self):
-        user = self.request.user if self.request.user.is_authenticated else None
-        if user is None:
-            return super(ContactEmailCreate, self).get_initial()
-
-        return {'email': user.email, 'full_name': user.full_name}
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 def logout(request):
