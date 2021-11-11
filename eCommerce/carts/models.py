@@ -66,6 +66,13 @@ class Cart(models.Model):
     def calculate_total(subtotal):
         return Decimal(subtotal) * Decimal(1.08)
 
+    @property
+    def is_all_digital(self):
+        qs = self.products.filter(is_digital=True)
+        if not qs.exists():
+            return False
+        return True
+
     def __str__(self):
         return f"cart {self.id}"
 
