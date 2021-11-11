@@ -16,3 +16,12 @@ class OrderAccountList(LoginRequiredMixin, ListView):
 class OrderAccountDetail(LoginRequiredMixin, DetailView):
     model = Order
     template_name = 'orders/detail.html'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        qs = self.model.objects \
+            .filter(user=self.request.user, pk__iexact=pk) \
+            .select_related('address_shipping', 'address_billing', 'cart') \
+            .first()
+
+        return qs

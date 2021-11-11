@@ -37,8 +37,12 @@ class Order(models.Model):
     address_billing = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='address_billing', null=True, blank=True)
     status = models.CharField(choices=ORDER_STATUS_CHOICES, max_length=8, default='created')
     total = models.DecimalField(max_digits=7, decimal_places=2, default=0, help_text='Maximum subtotal is 99999.99')
+    timestamp = models.DateField(auto_now=True)
 
     objects = OrderManager()
+
+    class Meta:
+        ordering = ['-timestamp']
 
     def check_done(self):
         order = self
