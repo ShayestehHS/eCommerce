@@ -11,7 +11,6 @@ urlpatterns = [
     path('done/', views.done, name='done'),
     path('add_or_remove/', views.add_rmv_product, name='add_rmv'),
     path('remove/', views.remove, name='remove'),
-    path('set_address/', views.set_address_to_order, name='set_address'),
 
     path('zarinpal/verify/', views.verify, name='zp_verify'),
 ]

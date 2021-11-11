@@ -1,6 +1,12 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
 
+from address.forms import AddressForm
+from carts.utils import get_cart
+from eCommerce.utils import is_valid_url
 from orders.models import Order
 
 
@@ -13,6 +19,7 @@ class OrderAccountList(LoginRequiredMixin, ListView):
         return Order.objects.filter(user=self.request.user).not_created()
 
 
+# ToDo: Create PDF file for this data
 class OrderAccountDetail(LoginRequiredMixin, DetailView):
     model = Order
     template_name = 'orders/detail.html'
@@ -25,3 +32,34 @@ class OrderAccountDetail(LoginRequiredMixin, DetailView):
             .first()
 
         return qs
+
+
+@login_required
+@get_cart
+def set_address_to_order(request, cart):
+    form = AddressForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, 'Your form is not valid.')
+        return redirect('carts:checkout')
+
+    bill_sipp_type = request.POST['address_type']  # shipping || billing
+    address = form.save(commit=False)
+    address.user = request.user
+    address.address_type = bill_sipp_type
+    address.save()
+
+    order, is_new = Order.objects.get_or_create(cart=cart, user=request.user)
+    setattr(order, f'address_{bill_sipp_type}', address)
+    order.save(update_fields=[f'address_{bill_sipp_type}'])
+
+    msg = f'Your {bill_sipp_type} address is saved successfully'
+    messages.success(request, msg)
+
+    if order.check_done():
+        return redirect('carts:finalization')
+
+    messages.error(request, 'one address is available to fill')
+    next_page = request.POST.get('next')
+    if not is_valid_url(request, next_page):
+        return redirect('carts:checkout')
+    return redirect(next_page)
