@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-
 User = settings.AUTH_USER_MODEL
 
 TYPE_CHOICES = (
@@ -9,10 +8,11 @@ TYPE_CHOICES = (
     ('shipping', 'Shipping')
 )
 
+
 # ToDo: Change the model. address_1, address_2
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    address_type = models.CharField(max_length=8, choices=TYPE_CHOICES)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    address_type = models.CharField(max_length=8, choices=TYPE_CHOICES, blank=True)
     address_1 = models.CharField(max_length=127)
     address_2 = models.CharField(max_length=127, blank=True, null=True)
     country = models.CharField(max_length=63)

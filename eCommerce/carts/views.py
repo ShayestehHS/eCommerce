@@ -6,9 +6,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
+from django.views.generic import TemplateView
 
-from address.forms import AddressForm
-from carts.utils import get_cart
+from carts.utils import get_cart, get_cart_from_session
 from carts.models import Cart, Payments
 from eCommerce.utils import required_ajax
 from orders.models import Order
@@ -92,31 +92,11 @@ def remove(request, cart):
 
 @login_required
 @get_cart
-def checkout(request, cart):
-    if cart.products.count() == 0:
-        messages.error(request, 'Your cart is empty')
-        return redirect('carts:home')
-
-    order, is_new = Order.objects.get_or_create(cart=cart, user=request.user)
-    if order.status == 'created':
-        order.status = 'shipped'
-        order.save(update_fields=['status'])
-
-    context = {
-        'order': order,
-        'form': AddressForm(request.POST or None),
-    }
-    return render(request, 'carts/checkout.html', context)
-
-
-@login_required
-@get_cart
 def finalization(request, cart):
     order = Order.objects.get(cart=cart, status='shipped')
 
     if not order.check_done():  # address_shipping and address_billing is exists
-        messages.error(request,
-                       'You have to fill both of billing and shipping addresses.')
+        messages.error(request, 'You have to fill both of billing and shipping addresses.')
         return redirect('carts:home')
 
     order.total = cart.total
@@ -145,3 +125,16 @@ def done(request, cart):
     # ToDo: Send email to customer
     messages.success(request, 'Please wait for the doorbell to ring😎')
     return redirect('home')
+
+
+class CheckoutTemplateView(TemplateView):
+    template_name = 'carts/checkout.html'
+
+    def get_context_data(self, **kwargs):
+        cart = get_cart_from_session(self.request)
+        order, created = Order.objects.get_or_create(user=self.request.user, cart=cart)
+
+        context = super(CheckoutTemplateView, self).get_context_data(**kwargs)
+        context['order'] = order
+        context['cart'] = cart
+        return context

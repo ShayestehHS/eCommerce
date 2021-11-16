@@ -32,12 +32,10 @@ def object_viewed_signal_receiver(sender, instance, request, *args, **kwargs):
 
 
 def user_session_post_save(sender, instance, created, *args, **kwargs):
-    print(created)
     if created:
-        print('user: '+ str(instance.user))
-        print('user: '+ str(instance.id))
-        old_user_sessions = UserSession.objects.filter(user=instance.user, ended=False, active=True).exclude(id=instance.id)
-        print(old_user_sessions.count())
+        old_user_sessions = UserSession.objects\
+            .filter(user=instance.user, ended=False, active=True)\
+            .exclude(id=instance.id)
         if old_user_sessions.count() >= LIMIT_SESSION_COUNT:
             objs = []
             for session in old_user_sessions:

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Set address{% endblock title %}
+
+{% block content %}
+    <h1>{{ address_type|capfirst }} address</h1>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-5">
+                {% include 'carts/snippets/address_form.html' with address_type=address_type %}
+                {# ToDo: Move addres_form to address template folder #}
+
+                <form action="{% url 'address:ajax_list' %}?{{ request.GET.urlencode }}" method="GET"
+                      id="list_address" class="form_address_list">
+                    <input type="hidden" name="address_type" value="{{ address_type }}">
+                </form>
+
+                <input type="submit" value="Submit" class="btn btn-success" id="btn_submit_form" form="address_form">
+                <input type="submit" value="Available addresses" class="btn btn-primary" form="list_address">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal --> {# ToDo: Use modal snippet #}
+    <div class="modal fade" id="modal_list" tabindex="-1"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/address/set_address.js' %}"></script>
+{% endblock %}

@@ -1,5 +1,3 @@
-import os
-
 from eCommerce.settings.base import *
 
 DEBUG = bool(int(os.getenv("DEBUG", default=0)))
@@ -12,6 +10,8 @@ ALLOWED_HOSTS.extend(
     )
 )
 SECRET_KEY = os.getenv('SECRET_KEY')
+
+DOMAIN_NAME = 'shayestehhs.ir'
 
 STATIC_URL = '/static/static/'
 MEDIA_URL = '/static/media/'
@@ -45,3 +45,7 @@ MAILCHIMP_DATA_CENTER = os.getenv('MAILCHIMP_DATA_CENTER')
 MAILCHIMP_PUB_KEY = os.getenv('MAILCHIMP_PUB_KEY')
 
 MERCHANT = os.getenv('MERCHANT')
+
+# Celery configuration
+BROKER_URL = f'redis://{DOMAIN_NAME}:6379'
+CELERY_RESULT_BACKEND = f'redis://{DOMAIN_NAME}:6379'

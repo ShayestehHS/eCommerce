@@ -44,3 +44,18 @@ def required_ajax(view):
         return view(request, *args, **kwargs)
 
     return _wrapped_view
+
+
+def get_next_url(view):
+    @wraps(view)
+    def _wrapped_view(request, *args, **kwargs):
+        next_url_get = request.GET.get('next')
+        next_url_post = request.POST.get('next')
+        redirect_path = next_url_get or next_url_post
+        if not is_valid_url(request, redirect_path):
+            kwargs['next_url'] = None
+
+        kwargs['next_url'] = redirect_path
+        return view(request, *args, **kwargs)
+
+    return _wrapped_view

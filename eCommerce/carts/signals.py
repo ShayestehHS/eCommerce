@@ -2,6 +2,7 @@ from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 
 from carts.models import Cart
+from orders.models import Order
 
 
 @receiver(m2m_changed, sender=Cart.products.through)
@@ -14,3 +15,5 @@ def m2m_changed_cart_receiver(instance, action, *args, **kwargs):
         instance.subtotal = subtotal
         instance.total = instance.calculate_total(subtotal)
         instance.save(update_fields=['subtotal', 'total'])
+
+        Order.objects.filter(cart=instance).update(total=instance.total)

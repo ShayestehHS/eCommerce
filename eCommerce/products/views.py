@@ -35,7 +35,7 @@ class ProductListView(ListView):
     def get_queryset(self):
         queryset = self.queryset \
             .prefetch_related('tagged_items') \
-            .defer('is_featured', 'is_active', 'timestamp')
+            .defer('is_featured', 'is_active', 'timestamp', 'is_digital')
 
         return queryset
 

@@ -38,6 +38,8 @@ class NextUrlMixin(object):
         return super(NextUrlMixin, self).dispatch(*args, **kwargs)
 
     def get_success_url(self):
+        if self.success_url is not None:
+            return self.success_url
         request = self.request
         next_url_get = request.GET.get('next')
         next_url_post = request.POST.get('next')

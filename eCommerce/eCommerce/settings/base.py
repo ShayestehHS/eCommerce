@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -141,6 +141,8 @@ LOGIN_REDIRECT_URL = reverse_lazy('home')
 
 LIMIT_SESSION = True
 LIMIT_SESSION_COUNT = 1
+
+LIMIT_ADDRESS_TO_USER = 6
 
 MAILCHIMP_API_KEY = "-- CHANGE ME --"
 MAILCHIMP_DATA_CENTER = "-- CHANGE ME --"

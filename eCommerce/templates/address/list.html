@@ -16,12 +16,10 @@
                 <td class="text-center">{{ address.address_1 }}</td>
                 <td class="text-center">{{ address.city }}</td>
                 <td>
-                    <form action="{% url 'address:use' %}" method="POST"
-                          class="form_address_use" data-type="{{ ship_bill }}"
-                          id="address_use_{{ forloop.counter0 }}">
+                    <form action="{% url 'address:use' %}?{{ request.GET.urlencode }}" method="POST" class="form_address_use">
                         {% csrf_token %}
                         <input type="hidden" name="address_id" value="{{ address.id }}">
-                        <input type="hidden" name="address_type" value="{{ ship_bill }}">
+                        <input type="hidden" name="address_type" value="{{ address_type }}">
                         <input type="submit" class="btn btn-info mr-0" value="Use">
                     </form>
                 </td>
@@ -29,7 +27,6 @@
         {% endfor %}
         </tbody>
     </table>
-    {{ address.address_1|truncatechars:20 }}
 
 {% else %}
     You didn't have any address

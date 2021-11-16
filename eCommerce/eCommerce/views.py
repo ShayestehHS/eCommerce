@@ -15,6 +15,7 @@ from products.models import Product
 
 User = get_user_model()
 
+
 class HomeTemplateView(MessageMixin, TemplateView):
     template_name = 'eCommerce/home.html'
     message = 'WELCOME'

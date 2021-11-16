@@ -1,8 +1,9 @@
-<form action="{% url 'carts:set_address' %}" method="POST" id="Address_form_{{ ship_bill }}"
-      class="form-group">
+<!-- Optional: None -->
+<!-- Required: form -->
+<form action="{% url 'address:set_address' %}" method="POST"
+      id="address_form" class="form-group">
     <input type="hidden" name="next" value=""> {# ToDo: set next #}
-    <input type="hidden" name="address_type"
-           value="{{ ship_bill }}">
+    <input type="hidden" name="address_type" value="{{ address_type }}">
     {% csrf_token %}
     <div>
         {{ form.address_1.label_tag }}
@@ -47,32 +48,9 @@
             <small>{{ form.phone_number.errors }}</small>
         </div>
     </div>
+    <input type="hidden" name="address_id" value="{{ address_id }}">
     <br>
 </form>
-<form action="{% url 'address:list' %}" method="GET" data-type="{{ ship_bill }}"
-      id="address_list_{{ ship_bill }}" class="form_address_list">
-    <input type="hidden" name="address_type" value="{{ ship_bill }}">
-</form>
 
-<input type="submit" value="Submit" class="btn btn-success" form="Address_form_{{ ship_bill }}">
-<input type="submit" value="Available addresses" class="btn btn-primary"
-       form="address_list_{{ ship_bill }}">
 
-<!-- Modal -->
-<div class="modal fade" id="modal_{{ ship_bill }}" tabindex="-1"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+

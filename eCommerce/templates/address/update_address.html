@@ -1,0 +1,54 @@
+<!-- ToDo: Set required and optional document -->
+<!-- Required: -->
+<!-- Optional: -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update address{% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-5 col-md-5">
+            <div id="form_division">
+                {% include 'carts/snippets/address_form.html' with form=form %}
+            </div>
+            <button type="submit" class="btn btn-success" form="address_form">Update</button>
+        </div>
+        <div class="col-7 col-md-7">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">City</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for address in addresses %}
+                    <tr>
+                        <td class="row-number">{{ forloop.counter }}</td>
+                        <td><p>{{ address.address_1 }}</p></td>
+                        <td><p>{{ address.address_type|capfirst }}</p></td>
+                        <td>{{ address.city }}</td>
+
+                        <td>
+                            <form action="{% url 'address:update' address.id %}"  method="GET" class="form_select_address">
+                                <input type="hidden" name="address_id" value="{{ address.id }}">
+                                <input type="submit" value="Select" class="btn btn-info btn-sm rounded-2">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/address/update_address.js' %}"></script>
+{% endblock %}

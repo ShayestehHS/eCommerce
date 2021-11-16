@@ -45,11 +45,12 @@ class Order(models.Model):
         ordering = ['-timestamp']
 
     def check_done(self):
-        order = self
-        address_shipping_exists = bool(order.address_shipping_id)
-        address_billing_exists = bool(order.address_billing_id)
+        if self.cart.is_all_digital:
+            address_shipping = True  # Because is not required anymore
+        else:
+            address_shipping = self.address_shipping_id
 
-        if address_shipping_exists and address_billing_exists:
+        if address_shipping and self.address_billing_id:
             return True
         return False
 
@@ -58,11 +59,9 @@ class Order(models.Model):
         if not done:
             return False
 
-        user_id = self.user_id
         cart = self.cart
 
         self.status = 'paid'
-        self.total = cart.total
         self.save(update_fields=['status', 'total'])
 
         cart.is_active = False

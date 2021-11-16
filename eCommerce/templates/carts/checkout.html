@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Checkout{% endblock title %}
 
 {% block content %}
-    <h1>Checkout</h1>
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-5">
-                {# ToDo: Fill the form after use the previous addresses. #}
-                <h4 class="text-center">Shipping address</h4>
-                {% include 'carts/snippets/address_form.html' with ship_bill='shipping' %}
-            </div>
-            <div class="col-12 col-md-5 offset-2">
-                <h4 class="text-center">Billing address</h4>
-                {% include 'carts/snippets/address_form.html' with ship_bill='billing' %}
-            </div>
-        </div>
-    </div>
-{% endblock content %}
 
-{% block js %}
-    <script src="{% static 'js/checkout.js' %}" ></script>
-{% endblock %}
+    <h4>In cart</h4>
+    <div class="container">
+        {% for pr in cart.products.all %}
+            <p>Product {{ forloop.counter }}: <a href="{{ pr.get_absolute_url }}">{{ pr.name }}</a></p>
+        {% endfor %}
+    </div>
+
+    <p>Order id: <a href="{{ order.get_absolute_url }}">{{ order.order_id }}</a></p>
+    <p>Subtotal: {{ cart.subtotal }}</p>
+    <p>Total: {{ order.total }}</p>
+
+
+    <p><a href="{% url 'address:set_address' %}?type=shipping&next={{ request.path }}" class="btn btn-info">Change shipping address</a></p>
+    <p><a href="{% url 'address:set_address' %}?type=billing&next={{ request.path }}" class="btn btn-info">Change billing address</a></p>
+
+    {% if order.check_done %}
+        <button class="btn btn-success">Payment page</button>
+    {% else %}
+        <h5 class="text-danger border-start border-3  border-danger">You are not done yet.</h5>
+    {% endif %}
+{% endblock content %}

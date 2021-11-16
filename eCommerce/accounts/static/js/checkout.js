@@ -10,24 +10,23 @@ function address_use_success(data, modal) {
     }
 }
 
+// Every form on submit
 $(document).on('submit', 'form', function (event) {
     const form = $(this).closest('form');
-    const bill_ship = form.data('type');
-    if (!bill_ship) {
-        return;
-    }
 
     event.preventDefault();
-    const modal = $('#modal_' + bill_ship);
+    const modal = $('#modal_list');
+    alert(modal)
+    console.log(modal);
     $.ajax({
             type: form.attr('method'),
-            url: form.attr('action'),
+            url: form.attr('action_url'),
             data: form.serialize(),
             success: function (data) {
                 const form_id = form.attr('id');
-                if (form_id.includes('address_list')) {
+                if (form_id === 'list_address') {
                     address_list_success(data, modal);
-                } else if (form_id.includes('address_use')) {
+                } else if (form_id === 'use_address') {
                     address_use_success(data, modal)
                 }
                 $(this).trigger('submit');
