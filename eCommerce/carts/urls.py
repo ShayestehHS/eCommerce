@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.cart_home, name='home'),
     path('checkout/', views.CheckoutTemplateView.as_view(), name='checkout'),
     path('finalization/', views.finalization, name='finalization'),
+    path('payment/', views.send_to_payment, name='payment'),
     path('done/', views.done, name='done'),
     path('add_or_remove/', views.add_rmv_product, name='add_rmv'),
     path('remove/', views.remove, name='remove'),

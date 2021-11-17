@@ -6,9 +6,31 @@
 
     <p>Subtotal: {{ cart.subtotal }}</p>
     <p>Total: {{ cart.total|floatformat:"2" }}</p>
-    <form action="{% url 'carts:done' %}">
-        <input type="hidden" name="order_id" value="{{ order.id }}">
-        <input type="submit" value="Done">
+
+    <h5>Please select your card:</h5>
+    <form action="{% url 'carts:payment' %}" method="GET">
+        {% csrf_token %}
+        <div class="row">
+            <div class="form-check col-md-2">
+                <input class="form-check-input" id="radioBank1" type="radio"
+                       name="bank" value="bank_id_2">
+                <label class="form-check-label" for="radioBank1">
+                    First bank
+                </label>
+                <div id="zarinpal">
+                    <script src="https://www.zarinpal.com/webservice/TrustCode" type="text/javascript"></script>
+                </div>
+            </div>
+            <div class="form-check col-md-2">
+                <input class="form-check-input" id="radioBank2" type="radio"
+                       name="bank" value="bank_id_1">
+                <label class="form-check-label" for="radioBank2">
+                    Second bank
+                </label>
+            </div>
+        </div>
+        <br>
+        <input type="submit" value="Pay" class="btn btn-primary">
     </form>
 
 {% endblock content %}

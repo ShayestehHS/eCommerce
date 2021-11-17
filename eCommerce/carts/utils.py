@@ -86,6 +86,4 @@ def send_request_to_zp(request, amount, email, mobile=None, description=settings
         e_message = req.json()['errors']['message']
         return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 
-    Payments.objects.create(user=request.user, full_name=request.user.full_name,
-                            amount=amount, description=description)
     return redirect(settings.ZP_API_START_PAY.format(authority=authority))

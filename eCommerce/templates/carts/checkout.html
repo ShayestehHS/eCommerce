@@ -20,7 +20,7 @@
     <p><a href="{% url 'address:set_address' %}?type=billing&next={{ request.path }}" class="btn btn-info">Change billing address</a></p>
 
     {% if order.check_done %}
-        <button class="btn btn-success">Payment page</button>
+        <a href="{% url 'carts:payment' %}" class="btn btn-success">Payment page</a>
     {% else %}
         <h5 class="text-danger border-start border-3  border-danger">You are not done yet.</h5>
     {% endif %}

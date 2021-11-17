@@ -90,11 +90,12 @@ class ByMeCoffeeFormView(FormView):
         email = form.cleaned_data.get('email')
         full_name = form.cleaned_data.get('full_name')
         amount = form.cleaned_data.get('amount')
-        print('form is valid')
+        Payments.objects.get_or_create(full_name=self.request.user.full_name,
+                                       user=self.request.user, amount=amount)
         return send_request_to_zp(self.request, amount, email, description="Thanks for coffee.")
 
     def form_invalid(self, form):
-        print('form is invalid')
+        messages.error(self.request, 'Your form is invalid.')
         return super(ByMeCoffeeFormView, self).form_invalid(form)
 
 

@@ -16,43 +16,56 @@ from orders.models import Order, Payments
 
 @login_required
 def verify(request):
+    payment = Payments.objects.filter(user=request.user).latest()
+
     if request.GET.get('Status') != 'OK':
+        payment.status = 'failed'
+        payment.save(update_fields=['status'])
+        messages.error(request, 'Transaction failed')
         return HttpResponse('Transaction failed or canceled by user')
 
     t_status = request.GET.get('Status')
     t_authority = request.GET['Authority']
-    req_header = {"accept": "application/json", "content-type": "application/json'"}
-    payment = Payments.objects.filter(user=request.user).latest()
+    req_header = {"accept": "application/json", "content-type": "application/json"}
     req_data = {
         "merchant_id": settings.MERCHANT,
-        "amount": payment.amount,
+        "amount": payment.total,
         "authority": t_authority
     }
 
     req = requests.post(url=settings.ZP_API_VERIFY, data=json.dumps(req_data), headers=req_header)
+
     if len(req.json()['errors']) != 0:
         e_code = req.json()['errors']['code']
         e_message = req.json()['errors']['message']
 
         payment.status = 'error'
         payment.save(update_fields=['status'])
+        messages.error(request, 'Transaction was success but an error accrued')
         return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 
-    t_status = req.json()['data']['code']
+    request_data = req.json()['data']  # https://docs.zarinpal.com/paymentGateway/guide/
+    t_status = request_data['code']
     if t_status == 100:
-        response = HttpResponse("Transaction success.\nRefID: " + str(req.json()["data"]["ref_id"]))
+        response = HttpResponse("Transaction success.\nRefID: " + str(request_data["ref_id"]))
+        messages.success(request, 'Your transaction was successful.')
         payment.status = 'success'
+        payment.ref_id = request_data['ref_id']
+        payment.fee = request_data['fee']
 
     elif t_status == 101:
-        response = HttpResponse("Transaction submitted : " + str(req.json()['data']['message']))
+        response = HttpResponse("Transaction submitted : " + str(request_data['message']))
+        messages.error(request, 'Your transaction was submitted before.')
         payment.status = 'submit'
 
     else:
-        response = HttpResponse('Transaction failed.\nStatus: ' + str(req.json()['data']['message']))
+        response = HttpResponse('Transaction failed.\nStatus: ' + str(request_data['message']))
+        messages.error(request, 'Transaction failed')
         payment.status = 'failed'
 
-    payment.save(update_fields=['status'])
-    return response
+    payment.save()
+    return render(request, 'carts/verify.html', context={'payment': payment})
+
 
 @get_cart
 def cart_home(request, cart):
@@ -102,14 +115,14 @@ def remove(request, cart):
 @login_required
 @get_cart
 def finalization(request, cart):
-    order = Order.objects.get(cart=cart, status='shipped')
+    order = Order.objects.filter(cart=cart) \
+        .select_related('cart') \
+        .first()  # We need cart in check_done() => self.cart
 
     if not order.check_done():  # address_shipping and address_billing is exists
         messages.error(request, 'You have to fill both of billing and shipping addresses.')
         return redirect('carts:home')
 
-    order.total = cart.total
-    order.save(update_fields=['total'])
     context = {
         'order': order,
         'cart': cart,
@@ -130,10 +143,24 @@ def done(request, cart):
     is_deactivated = order.deactivate_cart(request, checked=True)
     if not is_deactivated:
         messages.error(request, 'Something bad is happening, Please contact to us')
+        # ToDo: Send email to customer
         return redirect('carts:home')
-    # ToDo: Send email to customer
     messages.success(request, 'Please wait for the doorbell to ring😎')
     return redirect('home')
+
+
+@login_required
+@get_cart
+def send_to_payment(request, cart):
+    if request.method == "GET":
+        order = Order.objects.filter(cart=cart, user=request.user).only('total').first()
+        amount = order.total
+
+        order.status = 'shipped'
+        order.save(update_fields=['status'])
+        Payments.objects.get_or_create(full_name=request.user.full_name, order=order,
+                                       user=request.user, amount=amount)
+        return send_request_to_zp(request, int(amount) * 1000, request.user.email)
 
 
 class CheckoutTemplateView(TemplateView):
