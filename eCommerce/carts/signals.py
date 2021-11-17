@@ -16,4 +16,5 @@ def m2m_changed_cart_receiver(instance, action, *args, **kwargs):
         instance.total = instance.calculate_total(subtotal)
         instance.save(update_fields=['subtotal', 'total'])
 
-        Order.objects.filter(cart=instance).update(total=instance.total)
+        order = Order.objects.filter(cart=instance)
+        order.update(total=instance.total)
