@@ -14,6 +14,14 @@ ORDER_STATUS_CHOICES = (
     ('paid', 'Paid'),
     ('refunded', 'Refunded'),
 )
+PAYMENT_STATUS_CHOICES = (
+    ('error', 'ERROR'),
+    ('submit', 'SUBMIT'),
+    ('failed', 'FAILED'),
+    ('success', 'SUCCESS'),
+    ('created', 'CREATED'),
+)
+
 
 
 class OrderQuerySet(models.query.QuerySet):
@@ -78,3 +86,27 @@ class Order(models.Model):
 
     def get_absolute_url(self):
         return reverse('orders:detail', kwargs={'pk': self.pk})
+
+
+class Payments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.CharField(max_length=7, choices=PAYMENT_STATUS_CHOICES, default='created')
+    ref_id = models.PositiveIntegerField(null=True, blank=True)
+    fee = models.PositiveIntegerField(null=True, blank=True)
+    full_name = models.CharField(max_length=127)
+    order = models.ForeignKey(to=Order, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.PositiveIntegerField()
+    description = models.CharField(max_length=200)
+    date = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and self.full_name is None and self.user is not None:  # On create
+            self.full_name = self.user.full_name
+
+        super(Payments, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{str(self.user)}: {self.amount}"
+
+    class Meta:
+        get_latest_by = ['date']

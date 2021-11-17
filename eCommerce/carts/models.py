@@ -9,14 +9,6 @@ from products.utils import get_product, validate_id
 
 User = settings.AUTH_USER_MODEL
 
-STATUS_CHOICES = (
-    ('error', 'ERROR'),
-    ('submit', 'SUBMIT'),
-    ('failed', 'FAILED'),
-    ('success', 'SUCCESS'),
-    ('created', 'CREATED'),
-)
-
 
 class CartManager(models.Manager):
     def new(self, request, **kwargs):
@@ -85,23 +77,4 @@ class Cart(models.Model):
         return f"cart {self.id}"
 
 
-class Payments(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    full_name = models.CharField(max_length=127)
-    cart_id = models.PositiveIntegerField(null=True, blank=True)
-    amount = models.PositiveIntegerField()
-    description = models.CharField(max_length=200)
-    date = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=7, choices=STATUS_CHOICES, default='created')
 
-    def save(self, *args, **kwargs):
-        if not self.pk and self.full_name is None and self.user is not None:  # On create
-            self.full_name = self.user.full_name
-
-        super(Payments, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{str(self.user)}: {self.amount}"
-
-    class Meta:
-        get_latest_by = ['date']

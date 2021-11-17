@@ -9,7 +9,7 @@ from django.http import HttpResponse
 
 from functools import wraps
 
-from carts.models import Cart, Payments
+from carts.models import Cart
 from eCommerce.utils import update_session
 
 

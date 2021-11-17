@@ -9,9 +9,9 @@ from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 
 from carts.utils import get_cart, get_cart_from_session, send_request_to_zp
-from carts.models import Cart, Payments
+from carts.models import Cart
 from eCommerce.utils import required_ajax
-from orders.models import Order
+from orders.models import Order, Payments
 
 
 @login_required

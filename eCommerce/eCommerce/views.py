@@ -10,7 +10,8 @@ from accounts.forms import ContactEmailForm
 from carts.utils import send_request_to_zp
 from eCommerce.utils import custom_send_email, required_ajax
 from eCommerce.mixins import MessageMixin
-from eCommerce.forms import ByMeCoffeeForm
+from orders.forms import ByMeCoffeeForm
+from orders.models import Payments
 from products.models import Product
 
 User = get_user_model()

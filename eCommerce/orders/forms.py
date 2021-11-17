@@ -1,5 +1,5 @@
 from django import forms
-from carts.models import Payments
+from orders.models import Payments
 
 
 class ByMeCoffeeForm(forms.ModelForm):
