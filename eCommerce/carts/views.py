@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 
-from carts.utils import get_cart, get_cart_from_session
+from carts.utils import get_cart, get_cart_from_session, send_request_to_zp
 from carts.models import Cart, Payments
 from eCommerce.utils import required_ajax
 from orders.models import Order
@@ -22,9 +22,10 @@ def verify(request):
     t_status = request.GET.get('Status')
     t_authority = request.GET['Authority']
     req_header = {"accept": "application/json", "content-type": "application/json'"}
+    payment = Payments.objects.filter(user=request.user).latest()
     req_data = {
         "merchant_id": settings.MERCHANT,
-        "amount": Payments.objects.filter(user=request.user).latest().only('amount'),
+        "amount": payment.amount,
         "authority": t_authority
     }
 
@@ -32,18 +33,26 @@ def verify(request):
     if len(req.json()['errors']) != 0:
         e_code = req.json()['errors']['code']
         e_message = req.json()['errors']['message']
+
+        payment.status = 'error'
+        payment.save(update_fields=['status'])
         return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 
     t_status = req.json()['data']['code']
     if t_status == 100:
-        return HttpResponse("Transaction success.\nRefID: " + str(req.json()["data"]["ref_id"]))
+        response = HttpResponse("Transaction success.\nRefID: " + str(req.json()["data"]["ref_id"]))
+        payment.status = 'success'
 
     elif t_status == 101:
-        return HttpResponse("Transaction submitted : " + str(req.json()['data']['message']))
+        response = HttpResponse("Transaction submitted : " + str(req.json()['data']['message']))
+        payment.status = 'submit'
 
     else:
-        return HttpResponse('Transaction failed.\nStatus: ' + str(req.json()['data']['message']))
+        response = HttpResponse('Transaction failed.\nStatus: ' + str(req.json()['data']['message']))
+        payment.status = 'failed'
 
+    payment.save(update_fields=['status'])
+    return response
 
 @get_cart
 def cart_home(request, cart):

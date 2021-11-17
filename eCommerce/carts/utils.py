@@ -9,7 +9,7 @@ from django.http import HttpResponse
 
 from functools import wraps
 
-from carts.models import Cart
+from carts.models import Cart, Payments
 from eCommerce.utils import update_session
 
 
@@ -67,6 +67,7 @@ def send_request_to_zp(request, amount, email, mobile=None, description=settings
     }
     if mobile:
         req_data['metadata']['mobile'] = mobile
+
     req_header = {"accept": "application/json",
                   "content-type": "application/json'"}
     req = requests.post(url=settings.ZP_API_REQUEST, data=json.dumps(req_data), headers=req_header)
@@ -79,9 +80,12 @@ def send_request_to_zp(request, amount, email, mobile=None, description=settings
         print(f"-- (req.json) IS: {req.json()} --")
         print(f"-- (req.json()['data']) IS: {req.json()['data']} --")
         return HttpResponse(status=500)
-    if len(req.json()['errors']) == 0:
-        return redirect(settings.ZP_API_STARTPAY.format(authority=authority))
-    else:
+
+    if len(req.json()['errors']) != 0:
         e_code = req.json()['errors']['code']
         e_message = req.json()['errors']['message']
         return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
+
+    Payments.objects.create(user=request.user, full_name=request.user.full_name,
+                            amount=amount, description=description)
+    return redirect(settings.ZP_API_START_PAY.format(authority=authority))
