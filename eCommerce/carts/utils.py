@@ -34,11 +34,12 @@ def get_cart_id_from_session(request, cart_id=None):
 def get_cart_from_session(request):
     user = request.user if request.user.is_authenticated else None
     if user:
-        user_cart = Cart.objects.filter(user=user, is_active=True)
-        if user_cart.exists():
-            user_cart = user_cart.first()
+        try:
+            user_cart = Cart.objects.get(user=user, is_active=True)
             update_session(request, user_cart)
             return user_cart
+        except Cart.DoesNotExist:
+            pass
 
     cart_id = get_cart_id_from_session(request=request)
     cart_obj, is_new = Cart.objects.get_or_new(request=request, pro_id=cart_id)
