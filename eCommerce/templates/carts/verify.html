@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify{% endblock title %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col text-center">
+            {% if payment.status == 'success' %}
+
+                {% if payment.order_id %} {# It's not coffee #}
+                    <h1>Thanks for shopping</h1>
+                {% else %} {# It's coffee #}
+                    <h1>Thanks for coffee</h1>
+                {% endif %}
+                <p>Your reference id is: {{ payment.ref_id }}</p>
+
+            {% elif payment.status == 'failed' %}
+                <h1>Transaction failed.</h1>
+
+            {% elif payment.status == 'submit' %}
+                <h1>This transaction is submitted before.</h1>
+                <p>Reference id is: {{ payment.ref_id }}</p>
+
+            {% elif payment.status == 'error' %}
+                <h1>Strange error is happened.</h1>
+            {% endif %}
+
+            <a href="{% url 'home' %}" class="btn btn-info">Home</a>
+        </div>
+    </div>
+
+{% endblock content %}
