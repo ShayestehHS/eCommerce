@@ -5,6 +5,7 @@ from django.urls import reverse
 from address.models import Address
 from carts.models import Cart
 from eCommerce.utils import update_session
+from products.models import Product
 
 User = settings.AUTH_USER_MODEL
 
@@ -21,7 +22,6 @@ PAYMENT_STATUS_CHOICES = (
     ('success', 'SUCCESS'),
     ('created', 'CREATED'),
 )
-
 
 
 class OrderQuerySet(models.query.QuerySet):
@@ -110,3 +110,14 @@ class Payments(models.Model):
 
     class Meta:
         get_latest_by = ['date']
+
+
+class ProductPurchase(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    refunded = models.BooleanField(default=False)
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product.name

@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import TemplateView
 
-from carts.utils import get_cart, get_cart_from_session, send_request_to_zp
+from carts.utils import done, get_cart, get_cart_from_session, send_request_to_zp
 from carts.models import Cart
 from eCommerce.utils import required_ajax
 from orders.models import Order, Payments
@@ -31,7 +31,7 @@ def verify(request):
     req_data = {
         "merchant_id": settings.MERCHANT,
         "amount": payment.total,
-        "authority": t_authority
+        "authority": t_authority,
     }
 
     req = requests.post(url=settings.ZP_API_VERIFY, data=json.dumps(req_data), headers=req_header)
@@ -48,19 +48,20 @@ def verify(request):
     request_data = req.json()['data']  # https://docs.zarinpal.com/paymentGateway/guide/
     t_status = request_data['code']
     if t_status == 100:
-        response = HttpResponse("Transaction success.\nRefID: " + str(request_data["ref_id"]))
+        # response = HttpResponse("Transaction success.\nRefID: " + str(request_data["ref_id"]))
         messages.success(request, 'Your transaction was successful.')
         payment.status = 'success'
         payment.ref_id = request_data['ref_id']
         payment.fee = request_data['fee']
+        done(request)
 
     elif t_status == 101:
-        response = HttpResponse("Transaction submitted : " + str(request_data['message']))
+        # response = HttpResponse("Transaction submitted : " + str(request_data['message']))
         messages.error(request, 'Your transaction was submitted before.')
         payment.status = 'submit'
 
     else:
-        response = HttpResponse('Transaction failed.\nStatus: ' + str(request_data['message']))
+        # response = HttpResponse('Transaction failed.\nStatus: ' + str(request_data['message']))
         messages.error(request, 'Transaction failed')
         payment.status = 'failed'
 
@@ -134,35 +135,19 @@ def finalization(request, cart):
 
 @login_required
 @get_cart
-def done(request, cart):
-    order = Order.objects.get(cart=cart, status='shipped')
-
-    if not order.check_done():  # address_shipping and address_billing is exists
-        messages.error(request,
-                       'You have to fill both of billing and shipping addresses.')
-        return redirect('carts:home')
-
-    is_deactivated = order.deactivate_cart(request, checked=True)
-    if not is_deactivated:
-        messages.error(request, 'Something bad is happening, Please contact to us')
-        # ToDo: Send email to customer
-        return redirect('carts:home')
-    messages.success(request, 'Please wait for the doorbell to ring😎')
-    return redirect('home')
-
-
-@login_required
-@get_cart
 def send_to_payment(request, cart):
     if request.method == "GET":
-        order = Order.objects.filter(cart=cart, user=request.user).only('total').first()
-        amount = order.total
+        user = request.user
+        order = Order.objects.filter(cart=cart, user=user).only('total').first()
+        if not order.check_done():
+            messages.error(request, 'You are not done,yet.')
+            return redirect('home')
 
         order.status = 'shipped'
         order.save(update_fields=['status'])
-        Payments.objects.get_or_create(full_name=request.user.full_name, order=order,
-                                       user=request.user, amount=amount)
-        return send_request_to_zp(request, int(amount) * 1000, request.user.email)
+        Payments.objects.get_or_create(full_name=user.full_name, order=order,
+                                       user=user, amount=order.total)
+        return send_request_to_zp(request, int(order.total) * 1000, user.email)
 
 
 class CheckoutTemplateView(TemplateView):

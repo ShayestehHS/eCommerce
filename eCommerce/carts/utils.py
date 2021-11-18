@@ -1,6 +1,6 @@
 import json
-
 import requests
+from django.contrib import messages
 
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -11,6 +11,7 @@ from functools import wraps
 
 from carts.models import Cart
 from eCommerce.utils import update_session
+from orders.models import Order, ProductPurchase
 
 
 def get_cart_id_from_session(request, cart_id=None):
@@ -88,3 +89,22 @@ def send_request_to_zp(request, amount, email, mobile=None, description=settings
         return HttpResponse(f"Error code: {e_code}, Error Message: {e_message}")
 
     return redirect(settings.ZP_API_START_PAY.format(authority=authority))
+
+
+def done(request):
+    cart = get_cart_from_session(request)
+    order = Order.objects.get(cart=cart)
+
+    is_deactivated = order.deactivate_cart(request, checked=True)
+
+    if not is_deactivated:
+        # ToDo: Send email to admin
+        pass
+
+    bulk_list = []
+    for pr in cart.products.all():
+        bulk_list.append(ProductPurchase(order=order, product=pr))
+    ProductPurchase.objects.bulk_create(bulk_list)
+
+    messages.success(request, 'Please wait for the doorbell to ring😎')
+    return
