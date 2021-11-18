@@ -70,7 +70,7 @@ class Order(models.Model):
         cart = self.cart
 
         self.status = 'paid'
-        self.save(update_fields=['status', 'total'])
+        self.save(update_fields=['status'])
 
         cart.is_active = False
         cart.save(update_fields=['is_active'])
