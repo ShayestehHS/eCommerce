@@ -16,8 +16,14 @@
     <p>Total: {{ order.total }}</p>
 
 
-    <p><a href="{% url 'address:set_address' %}?type=shipping&next={{ request.path }}" class="btn btn-info">Change shipping address</a></p>
-    <p><a href="{% url 'address:set_address' %}?type=billing&next={{ request.path }}" class="btn btn-info">Change billing address</a></p>
+    <p>
+        <a href="{% url 'address:set_address' %}?type=shipping&next={{ request.path }}"
+           class="btn btn-info">Change shipping address
+        </a>
+        <small>{% if cart.is_all_digital %}(Optional){% endif %}</small>
+    </p>
+    <p><a href="{% url 'address:set_address' %}?type=billing&next={{ request.path }}"
+          class="btn btn-info">Change billing address</a></p>
 
     {% if order.check_done %}
         <a href="{% url 'carts:payment' %}" class="btn btn-success">Payment page</a>
