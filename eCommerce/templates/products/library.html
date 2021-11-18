@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Library{% endblock title %}
+
+{% block content %}
+
+    {% if object_list %}
+        <div class='row'>
+            <div class='col-12'>
+                <h1>Library</h1>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col'>
+                <table class='table'>
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Download</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for pr in object_list %}
+                        <tr>
+                            <td><a href='{{ pr.get_absolute_url }}'>{{ pr.name }}</a></td>
+                            <td> Coming soon
+{#                                {% for download in pr.get_downloads %}#}
+{#                                    <a href='{{ download.get_download_url }}'>{{ download.display_name }}</a><br/>#}
+{#                                {% endfor %}#}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col text-center">
+                <h1>You don't have any digital product.</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

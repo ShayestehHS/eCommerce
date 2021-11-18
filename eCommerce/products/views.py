@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView
 from analytics.mixins import ObjectViewedMixin
 from carts import utils
 from carts.models import Cart
+from orders.models import ProductPurchase
 from products.models import Product
 
 
@@ -63,3 +64,13 @@ class ProductDetailView(ObjectViewedMixin, DetailView):
         cart = utils.get_cart_from_session(self.request)
         context['in_cart'] = self.object.id in cart.products.all_id()
         return context
+
+
+class DigitalProductListView(LoginRequiredMixin, ListView):
+    model = Product
+    template_name = 'products/library.html'
+
+    def get_queryset(self):
+        pp_id = ProductPurchase.objects.filter(product__is_digital=True).values_list('id', flat=True)
+        qs = Product.objects.filter(id__in=pp_id).only('id', 'name', 'slug')
+        return qs
