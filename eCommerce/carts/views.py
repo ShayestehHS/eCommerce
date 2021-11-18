@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.generic import TemplateView
 
 from carts.utils import get_cart, get_cart_from_session, send_request_to_zp
@@ -166,11 +167,25 @@ def send_to_payment(request, cart):
 class CheckoutTemplateView(TemplateView):
     template_name = 'carts/checkout.html'
 
+    def __init__(self):
+        super(CheckoutTemplateView, self).__init__()
+        self.cart = None
+
     def get_context_data(self, **kwargs):
-        cart = get_cart_from_session(self.request)
+        cart = self.cart or get_cart_from_session(self.request)
         order, created = Order.objects.get_or_create(user=self.request.user, cart=cart)
 
         context = super(CheckoutTemplateView, self).get_context_data(**kwargs)
         context['order'] = order
         context['cart'] = cart
         return context
+
+    def get(self, request, *args, **kwargs):
+        self.cart = get_cart_from_session(request)
+
+        order, created = Order.objects.get_or_create(user=request.user, cart=self.cart)
+
+        if not self.cart.order.check_done():
+            addr_type = 'shipping' if not self.cart.is_all_digital and order.address_billing_id else 'billing'
+            return redirect(reverse('address:set_address') + f'?type={addr_type}&next={request.META.get("HTTP_REFERER")}')
+        return super(CheckoutTemplateView, self).get(request, *args, **kwargs)

@@ -3,13 +3,12 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
 from django.http import Http404, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView
 
-from address.forms import AddressCreateForm , AddressUpdateForm
+from address.forms import AddressCreateForm, AddressUpdateForm
 from address.models import Address
 from carts.utils import get_cart, get_cart_from_session
 from eCommerce.mixins import NextUrlMixin
@@ -18,6 +17,7 @@ from orders.models import Order
 
 User = get_user_model()
 LIMIT_ADDRESS_TO_USER = getattr(settings, 'LIMIT_ADDRESS_TO_USER', 6)
+
 
 def get_address_type(address):
     if address.address_type:
@@ -109,8 +109,8 @@ class AddressCreateView(LoginRequiredMixin, NextUrlMixin, CreateView):
         context = super(AddressCreateView, self).get_context_data(**kwargs)
         extra_context = {
             'order': self.order,
-            'form': AddressCreateForm(self.request.POST or None),
-            'address_type': get_address_type(self),
+            'form': kwargs.get('form') or AddressCreateForm(self.request.POST or None),
+            'address_type': kwargs.get('address_type') or get_address_type(self),
         }
         context.update(extra_context)
         return context
@@ -121,9 +121,6 @@ class AddressCreateView(LoginRequiredMixin, NextUrlMixin, CreateView):
             messages.error(request, 'Your cart is empty')
             return redirect('carts:home')
 
-        if self.model.objects.filter(user_id=request.user.id).count() >= LIMIT_ADDRESS_TO_USER:
-            raise ValidationError(f'You already have maximal amount of address ({LIMIT_ADDRESS_TO_USER})')
-
         self.order, created = Order.objects.get_or_create(cart=self.cart, user=request.user)
         self.address_type = get_address_type(self)
 
@@ -131,11 +128,19 @@ class AddressCreateView(LoginRequiredMixin, NextUrlMixin, CreateView):
 
     def form_invalid(self, form):
         request = self.request
+        address_type = form.cleaned_data.get('address_type')
+        context = self.get_context_data(form=form, address_type=address_type)
+
         messages.error(request, 'Your form is not valid.')
-        return redirect(request.META.get('HTTP_REFERER'))  # Back to referred url
+        return self.render_to_response(context)
 
     def form_valid(self, form):
         request = self.request
+        if Address.objects.filter(user_id=request.user.id).count() >= LIMIT_ADDRESS_TO_USER:
+            msg = f'You already have maximal amount of address ({LIMIT_ADDRESS_TO_USER})'
+            messages.error(request, msg)
+            form.add_error('user', msg)
+            return self.form_invalid(form)
 
         form.instance.user = request.user
         messages.success(request, f'Your address is saved successfully')

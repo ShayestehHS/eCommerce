@@ -2,9 +2,10 @@
 <!-- Required: form -->
 <form action="{% url 'address:set_address' %}" method="POST"
       id="address_form" class="form-group">
-    <input type="hidden" name="next" value=""> {# ToDo: set next #}
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
     <input type="hidden" name="address_type" value="{{ address_type }}">
     {% csrf_token %}
+    <small>{{ form.user.errors }}</small>
     <div>
         {{ form.address_1.label_tag }}
         {{ form.address_1 }}
