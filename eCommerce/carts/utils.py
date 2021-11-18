@@ -31,7 +31,7 @@ def get_cart_id_from_session(request, cart_id=None):
     return cart_id
 
 
-def get_cart_from_session(request):
+def get_cart_from_session(request, allow_none=False):
     user = request.user if request.user.is_authenticated else None
     if user:
         try:
@@ -39,7 +39,8 @@ def get_cart_from_session(request):
             update_session(request, user_cart)
             return user_cart
         except Cart.DoesNotExist:
-            pass
+            if allow_none:
+                return None
 
     cart_id = get_cart_id_from_session(request=request)
     cart_obj, is_new = Cart.objects.get_or_new(request=request, pro_id=cart_id)

@@ -68,18 +68,19 @@ def verify(request):
     return render(request, 'carts/verify.html', context={'payment': payment})
 
 
-@get_cart
-def cart_home(request, cart):
+def cart_home(request):
     user = request.user
     if not user.is_active or not user.is_registered:
         messages.error(request, "You don't have permission to this page.")
         return redirect('home')
 
-    products = cart.products.values('id', 'name', 'price')
+    cart = get_cart_from_session(request, allow_none=True)
+    products = None
+    if cart is not None:
+        products = cart.products.values('id', 'name', 'price')
 
     context = {
         'cart': cart,
-        'total': cart.total,
         'products': products,
     }
     return render(request, 'carts/cart_home.html', context)
