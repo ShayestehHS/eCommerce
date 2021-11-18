@@ -19,6 +19,10 @@
             <p>Subtotal: {{ object.cart.subtotal }}</p>
             <p>Order Total: {{ object.total }}</p>
             <p>Order Status: {{ object.status }}</p>
+
+            {% if object.check_done %}
+                <a href="{% url 'carts:checkout' %}" class="btn btn-success">Checkout</a>
+            {% endif %}
         </div>
     </div>
 
