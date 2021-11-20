@@ -23,12 +23,13 @@ def user_logged_in_receiver(sender, instance, request, *args, **kwargs):
 
 @receiver(object_viewed_signal)
 def object_viewed_signal_receiver(sender, instance, request, *args, **kwargs):
-    ObjectViewed.objects.create(
-        user=request.user,
-        content_type=ContentType.objects.get_for_model(sender),
-        object_id=instance.id,
-        ip_address=get_client_ip(request),
-    )
+    if request.user.is_authenticated:
+        ObjectViewed.objects.create(
+            user=request.user,
+            content_type=ContentType.objects.get_for_model(sender),
+            object_id=instance.id,
+            ip_address=get_client_ip(request),
+        )
 
 
 def user_session_post_save(sender, instance, created, *args, **kwargs):
