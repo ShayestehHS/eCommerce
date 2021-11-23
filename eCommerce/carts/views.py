@@ -4,6 +4,7 @@ import json
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -69,6 +70,7 @@ def verify(request):
     return render(request, 'carts/verify.html', context={'payment': payment})
 
 
+@login_required
 def cart_home(request):
     user = request.user
     if not user.is_active or not user.is_registered:
@@ -104,6 +106,7 @@ def add_rmv_product(request, cart):
     })
 
 
+@login_required
 @required_ajax
 @get_cart
 def remove(request, cart):
@@ -150,7 +153,7 @@ def send_to_payment(request, cart):
         return send_request_to_zp(request, int(order.total) * 1000, user.email)
 
 
-class CheckoutTemplateView(TemplateView):
+class CheckoutTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'carts/checkout.html'
 
     def __init__(self):

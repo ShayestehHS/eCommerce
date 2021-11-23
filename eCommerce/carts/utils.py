@@ -1,6 +1,7 @@
 import json
 import requests
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -34,14 +35,16 @@ def get_cart_id_from_session(request, cart_id=None):
 
 def get_cart_from_session(request, allow_none=False):
     user = request.user if request.user.is_authenticated else None
-    if user:
-        try:
-            user_cart = Cart.objects.get(user=user, is_active=True)
-            update_session(request, user_cart)
-            return user_cart
-        except Cart.DoesNotExist:
-            if allow_none:
-                return None
+    if user is None:
+        return None
+
+    try:
+        user_cart = Cart.objects.get(user=user, is_active=True)
+        update_session(request, user_cart)
+        return user_cart
+    except Cart.DoesNotExist:
+        if allow_none:
+            return None
 
     cart_id = get_cart_id_from_session(request=request)
     cart_obj, is_new = Cart.objects.get_or_new(request=request, pro_id=cart_id)
@@ -52,8 +55,11 @@ def get_cart_from_session(request, allow_none=False):
 def get_cart(view):
     @wraps(view)
     def _wrapped_view(request, *args, **kwargs):
-        kwargs['cart'] = get_cart_from_session(request)
+        cart = get_cart_from_session(request)
+        if cart is None:
+            raise ValueError('User have to authenticate.')
 
+        kwargs['cart'] = cart
         return view(request, *args, **kwargs)
 
     return _wrapped_view

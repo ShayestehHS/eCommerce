@@ -2,8 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 
 from analytics.mixins import ObjectViewedMixin
-from carts import utils
 from carts.models import Cart
+from carts.utils import get_cart_from_session
 from orders.models import ProductPurchase
 from products.models import Product
 
@@ -61,8 +61,9 @@ class ProductDetailView(ObjectViewedMixin, DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ProductDetailView, self).get_context_data(*args, **kwargs)
-        cart = utils.get_cart_from_session(self.request)
-        context['in_cart'] = self.object.id in cart.products.all_id()
+        cart = get_cart_from_session(self.request)
+        if cart is not None:
+            context['in_cart'] = self.object.id in cart.products.all_id()
         return context
 
 
